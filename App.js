@@ -85,7 +85,6 @@ export default function App() {
     LatoBold: require("./assets/fonts/lato/Lato-Bold.ttf"),
     LatoLight: require("./assets/fonts/lato/Lato-Light.ttf"),
     LatoThin: require("./assets/fonts/lato/Lato-Thin.ttf"),
-    TwemojiMozilla: require("./node_modules/react-native-international-phone-number/lib/assets/fonts/TwemojiMozilla.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -107,10 +106,7 @@ export default function App() {
   return (
     <RootSiblingParent>
       <View style={styles.container} onLayout={onLayoutRootView}>
-        <StatusBar
-          backgroundColor={safeAreaViewStyle.backgroundColor}
-          barStyle={barStyle}
-        />
+        <StatusBar backgroundColor={"transparent"} barStyle={barStyle} />
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="Welcome"

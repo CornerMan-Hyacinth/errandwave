@@ -1,14 +1,9 @@
 const COLORS = {
   darkTheme: "#141511",
   lightTheme: "#fff",
-  darkText: "#000000",
-  lightText: "#ffffff",
-  lightRed: "#FF1F00",
-  darkRed: "#881000",
-  lightBtnGreen: "#7ED957",
-  darkBtnGreen: "#35AF00",
-  lightTextGreen: "#5CFF17",
-  darkTextGreen: "#2F9902",
+  darkPink: "rgb(179, 7, 132)",
+  faded: "rgba(179, 7, 132, 0.7)",
+  gradient: ["rgba(179, 7, 132, 1)", "rgba(130, 4, 102, 0.5)"],
 };
 
 const SIZES = {
@@ -23,6 +18,7 @@ const SIZES = {
 
 const SHADOWS = {
   small: {
+    shadowColor: "#B30784",
     shadowOffset: {
       width: 0,
       height: 6,
@@ -32,6 +28,7 @@ const SHADOWS = {
     elevation: 8,
   },
   medium: {
+    shadowColor: "#B30784",
     shadowOffset: {
       width: 0,
       height: 5,
@@ -41,7 +38,7 @@ const SHADOWS = {
     elevation: 7,
   },
   large: {
-    shadowColor: "#000000",
+    shadowColor: "#B30784",
     shadowOffset: {
       width: 0,
       height: 18,
