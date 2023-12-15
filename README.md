@@ -10,12 +10,12 @@
 
 <br />
 
-<p>The app serves two categories of users:</p><br />
+<p>The app serves two categories of users:</p>
 
 #### Regular - those who book riders for deliveries.
+
 #### Riders - those who make the deliveries.
 
 ## 🚀 How to use
 
 > `Contact the developer at hycorner462@gmail.com`
-
