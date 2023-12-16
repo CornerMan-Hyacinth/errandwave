@@ -15,6 +15,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { getAsyncToken, saveAsyncToken } from "./src/helper/AsyncStorage";
 import Welcome from "./src/screens/Welcome";
 import Auth from "./src/screens/Auth";
+import Forgot from "./src/screens/Forgot";
+import Terms from "./src/screens/Terms";
 
 const Stack = createStackNavigator();
 
@@ -116,6 +118,16 @@ export default function App() {
             <Stack.Screen
               name="Auth"
               component={Auth}
+              options={screenOptions}
+            />
+            <Stack.Screen
+              name="Forgot"
+              component={Forgot}
+              options={screenOptions}
+            />
+            <Stack.Screen
+              name="Terms"
+              component={Terms}
               options={screenOptions}
             />
           </Stack.Navigator>

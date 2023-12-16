@@ -2,13 +2,18 @@
   "dependencies": {
     "@babel/register": "^7.22.15",
     "@react-native-async-storage/async-storage": "^1.18.2",
+    "@react-native-community/checkbox": "^0.5.16",
+    "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
     "expo": "^49.0.3",
     "expo-font": "^11.4.0",
+    "expo-linear-gradient": "~12.3.0",
     "expo-splash-screen": "^0.20.5",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.7.1",
+    "install": "^0.13.0",
+    "lottie-react-native": "5.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "^0.72.6",
@@ -18,9 +23,8 @@
     "react-native-linear-gradient": "^2.8.3",
     "react-native-reanimated": "~3.3.0",
     "react-native-root-siblings": "^5.0.1",
-    "react-native-web": "~0.19.6",
-    "expo-linear-gradient": "~12.3.0",
-    "lottie-react-native": "5.1.6"
+    "react-native-root-toast": "^3.5.1",
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
