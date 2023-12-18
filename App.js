@@ -17,6 +17,7 @@ import Welcome from "./src/screens/Welcome";
 import Auth from "./src/screens/Auth";
 import Forgot from "./src/screens/Forgot";
 import Terms from "./src/screens/Terms";
+import Home from "./src/screens/Home";
 
 const Stack = createStackNavigator();
 
@@ -125,6 +126,7 @@ export default function App() {
               component={Forgot}
               options={screenOptions}
             />
+            <Stack.Screen name="Home" component={Home} />
             <Stack.Screen
               name="Terms"
               component={Terms}
