@@ -7,10 +7,12 @@ import { saveAsyncToken } from "../../helper/AsyncStorage";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../../FirebaseConfig";
-import { collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import PickerField from "../general/PickerField";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { ActivityIndicator } from "react-native";
 
-const RegisterForm = () => {
+const RegisterForm = ({ handleNext }) => {
   const auth = FIREBASE_AUTH;
   const db = FIREBASE_DB;
 
@@ -37,6 +39,8 @@ const RegisterForm = () => {
     confirmPassword: "",
     agree: false,
   });
+
+  const [isLoading, setLoading] = useState(false);
 
   const updateField = (field, value) => {
     updateFormData((prevForm) => ({ ...prevForm, [field]: value }));
@@ -141,14 +145,11 @@ const RegisterForm = () => {
       await showToastMessage("Agree to the Terms to continue");
     } else {
       // Perform registration logic here
+      setLoading(true);
+
       const response = await createUser(email, password);
 
       if (response) {
-        const userId = response.user.uid;
-
-        // saving userId to AsyncStorage
-        saveAsyncToken("userId", userId);
-
         const collectionRef = collection(db, "users");
 
         // saving the user's data in firestore
@@ -156,14 +157,21 @@ const RegisterForm = () => {
           firstName: firstName,
           lastName: lastName,
           email: email,
+          school: school,
           password: password,
           rider: false,
         })
-          .then(() => {
+          .then((response) => {
             console.log("User saved successfully!");
+            saveAsyncToken("userId", response.id);
             handleNext();
           })
-          .catch((error) => console.log(error));
+          .catch((error) => console.log(error))
+          .finally(() =>
+            setTimeout(() => {
+              setLoading(false);
+            }, 1000)
+          );
       }
     }
   };
@@ -239,9 +247,16 @@ const RegisterForm = () => {
         </TouchableOpacity>
       </View>
 
-      <Pressable style={[styles.btn, { backgroundColor: darkPink }]}>
-        <Text style={styles.btnText}>Move In</Text>
-      </Pressable>
+      <TouchableOpacity
+        style={[styles.btn, { backgroundColor: darkPink }]}
+        onPress={handleSubmit}
+      >
+        {isLoading ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <Text style={styles.btnText}>Move In</Text>
+        )}
+      </TouchableOpacity>
     </ScrollView>
   );
 };
