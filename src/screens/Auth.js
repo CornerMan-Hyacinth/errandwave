@@ -6,7 +6,7 @@ import Success from "../components/auth/Success";
 import AuthForm from "../components/auth/AuthForm";
 
 const Auth = () => {
-  const [step, setStep] = useState(4);
+  const [step, setStep] = useState(1);
 
   const handleNext = () => {
     setStep((prevStep) => prevStep + 1);

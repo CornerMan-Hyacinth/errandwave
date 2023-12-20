@@ -9,15 +9,19 @@ import Toast from "react-native-root-toast";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../../FirebaseConfig";
 import { addDoc, collection } from "firebase/firestore";
 import PickerField from "../general/PickerField";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { ActivityIndicator } from "react-native";
 
 const RegisterForm = ({ handleNext }) => {
   const auth = FIREBASE_AUTH;
-  const db = FIREBASE_DB;
 
   const navigation = useNavigation();
   const { darkPink } = theme.COLORS;
+
+  const genderArray = ["Male", "Female"];
 
   const [schoolData, updateSchoolData] = useState([
     {
@@ -34,6 +38,7 @@ const RegisterForm = ({ handleNext }) => {
     firstName: "",
     lastName: "",
     email: "",
+    gender: "",
     school: "",
     password: "",
     confirmPassword: "",
@@ -65,48 +70,15 @@ const RegisterForm = ({ handleNext }) => {
   };
 
   const isValidUsername = (name) => {
-    // Simple email validation regex
+    // Simple name validation regex
     const nameRegex = /^[a-zA-Z]+$/;
     return nameRegex.test(name);
   };
 
-  // this function creates the user using email and password via FIREBASE AUTH
-  const createUser = async (email, password) => {
-    try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      return response;
-    } catch (error) {
-      console.log(error);
-
-      switch (error.code) {
-        case "auth/invalid-email":
-          showToastMessage("The email address is not valid.");
-          break;
-
-        case "auth/email-already-in-use":
-          showToastMessage("The email address is already in use.");
-          break;
-
-        case "auth/weak-password":
-          showToastMessage("The password is not strong enough.");
-          break;
-
-        case "auth/operation-not-allowed":
-          showToastMessage("This operation is not allowed!");
-          break;
-
-        default:
-          showToastMessage(
-            "An error occurred during sign up. Please try again later."
-          );
-          console.log(error.code);
-          break;
-      }
-    }
+  const isValidEmail = (email) => {
+    // Simple email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   /**  this function validates the user unputs, calls the createUser function
@@ -117,6 +89,7 @@ const RegisterForm = ({ handleNext }) => {
       firstName,
       lastName,
       email,
+      gender,
       school,
       password,
       confirmPassword,
@@ -128,16 +101,21 @@ const RegisterForm = ({ handleNext }) => {
       !firstName ||
       !lastName ||
       !email ||
+      !gender ||
       !school ||
       !password ||
       !confirmPassword
     ) {
       await showToastMessage("All fields are required!");
-    } else if (!isValidUsername(firstName) || !isValidUsername(lastName)) {
-      await showToastMessage("Username must contain only letters.");
+    } else if (!isValidUsername(firstName)) {
+      await showToastMessage("First name must contain only letters.");
+    } else if (!isValidUsername(lastName)) {
+      await showToastMessage("Last name must contain only letters.");
+    } else if (!isValidEmail(email)) {
+      await showToastMessage("Email is not valid.");
     } else if (password.length < 6 || password.length > 16) {
       await showToastMessage(
-        "Password must be at least 6 characters long and not over 16."
+        "Password must be at least 6 to 16 characters long."
       );
     } else if (password !== confirmPassword) {
       await showToastMessage("Passwords do not match!");
@@ -147,32 +125,46 @@ const RegisterForm = ({ handleNext }) => {
       // Perform registration logic here
       setLoading(true);
 
-      const response = await createUser(email, password);
-
-      if (response) {
-        const collectionRef = collection(db, "users");
-
-        // saving the user's data in firestore
-        await addDoc(collectionRef, {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          school: school,
-          password: password,
-          rider: false,
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          showToastMessage("An account has been created with the email.");
+          console.log("Yeah, this dude's already being created.");
         })
-          .then((response) => {
-            console.log("User saved successfully!");
-            saveAsyncToken("userId", response.id);
-            handleNext();
-          })
-          .catch((error) => console.log(error))
-          .finally(() =>
-            setTimeout(() => {
-              setLoading(false);
-            }, 1000)
-          );
-      }
+        .catch(async (error) => {
+          switch (error.code) {
+            case "auth/invalid-credential":
+              const jsonFormData = JSON.stringify(formData);
+              await saveAsyncToken("jsonUserData", jsonFormData);
+              handleNext();
+              break;
+
+            case "auth/user-disabled":
+              showToastMessage(
+                "This account has being suspended. Try again later."
+              );
+              break;
+
+            case "auth/network-request-failed":
+              showToastMessage("Check your network connection.");
+              break;
+
+            case "auth/operation-not-allowed":
+              showToastMessage("This operation is not allowed!");
+              break;
+
+            default:
+              showToastMessage(
+                "An error occurred during sign up. Please try again later."
+              );
+              console.log(error.code);
+              break;
+          }
+        })
+        .finally(() =>
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000)
+        );
     }
   };
 
@@ -192,6 +184,12 @@ const RegisterForm = ({ handleNext }) => {
       <InputField
         field="email"
         value={formData.email}
+        updateField={updateField}
+      />
+      <PickerField
+        data={genderArray}
+        field="gender"
+        value={formData.gender}
         updateField={updateField}
       />
       <PickerField

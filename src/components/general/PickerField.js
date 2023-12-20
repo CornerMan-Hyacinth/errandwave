@@ -11,19 +11,22 @@ const PickerField = ({ data, value, field, updateField }) => {
       case "school":
         return "School";
 
+      case "gender":
+        return "Gender";
+
       default:
         break;
     }
   };
 
   const topValue =
-    field === "school" ? "Choose your school" : "Pick your choice";
+    field === "school" ? "Choose your school" : "Choose your gender";
 
-  const renderData = data.map((item) => (
+  const renderData = data.map((item, index) => (
     <Picker.Item
-      key={item.id}
-      label={item.name}
-      value={item.name}
+      key={item.id || index}
+      label={item.name || item}
+      value={item.name || item}
       style={styles.pickerItem}
     />
   ));
@@ -53,14 +56,14 @@ export default PickerField;
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: 63,
+    height: 63,
     justifyContent: "center",
     marginBottom: 15,
   },
   labelBox: {
     position: "absolute",
     paddingHorizontal: 5,
-    top: -7,
+    top: 0,
     left: 40,
     backgroundColor: "white",
     zIndex: 1,
