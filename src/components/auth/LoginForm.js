@@ -5,7 +5,7 @@ import InputField from "../general/InputField";
 import { Pressable } from "react-native";
 import theme from "../../../assets/constants/theme";
 import { useNavigation } from "@react-navigation/native";
-import { FIREBASE_AUTH } from "../../../FirebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../../../FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { saveAsyncToken } from "../../helper/AsyncStorage";
@@ -13,6 +13,7 @@ import Toast from "react-native-root-toast";
 
 const LoginForm = () => {
   const auth = FIREBASE_AUTH;
+  const db = FIREBASE_DB;
 
   const navigation = useNavigation();
   const { darkPink } = theme.COLORS;
@@ -51,12 +52,15 @@ const LoginForm = () => {
       .then(() => {
         const q = query(collection(db, "users"), where("email", "==", email));
 
+        console.log("Okay");
+
         onSnapshot(q, (querySnapshot) => {
           querySnapshot.forEach((doc) => {
             saveAsyncToken("userId", doc.id);
             navigation.navigate("Home");
           });
         });
+        // navigation.navigate("Home");
       })
       .catch((error) => {
         switch (error.code) {
@@ -107,7 +111,10 @@ const LoginForm = () => {
         autoFocus={false}
       />
 
-      <Pressable onPress={() => navigation.navigate("Forgot")}>
+      <Pressable
+        onPress={() => navigation.navigate("Forgot")}
+        style={{ alignSelf: "flex-start" }}
+      >
         <Text style={[styles.forgot, { color: darkPink }]}>
           Forgot your password?
         </Text>

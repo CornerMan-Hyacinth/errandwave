@@ -1,7 +1,7 @@
 const COLORS = {
   darkTheme: "#141511",
   lightTheme: "#fff",
-  darkPink: "rgb(179, 7, 132)",
+  darkPink: "#B5055D",
   faded: "rgba(179, 7, 132, 0.7)",
   gradient: ["rgba(179, 7, 132, 1)", "rgba(130, 4, 102, 0.5)"],
 };

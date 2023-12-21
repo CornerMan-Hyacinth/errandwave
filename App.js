@@ -112,7 +112,7 @@ export default function App() {
         <StatusBar backgroundColor={"transparent"} barStyle={barStyle} />
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Welcome"
+            initialRouteName="Home"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="Welcome" component={Welcome} />
