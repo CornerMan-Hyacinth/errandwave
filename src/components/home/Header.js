@@ -3,8 +3,11 @@ import React from "react";
 import theme from "../../../assets/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Header = () => {
+  const navigation = useNavigation();
+
   const { darkPink } = theme.COLORS;
   const pinkColor = {
     color: darkPink,
@@ -14,7 +17,7 @@ const Header = () => {
     <View style={styles.container}>
       <View>
         <Text style={[styles.date, pinkColor]}>14 Dec, 2023</Text>
-        <Text style={styles.hello}>Good day, Nick</Text>
+        <Text style={styles.hello}>Good day, Nick!</Text>
       </View>
       <Pressable>
         <Ionicons name="menu-outline" size={25} color={pinkColor.color} />
@@ -42,7 +45,7 @@ const styles = StyleSheet.create({
   },
   hello: {
     fontFamily: "Prociono",
-    fontSize: 18,
+    fontSize: 16,
     color: "black",
   },
 });

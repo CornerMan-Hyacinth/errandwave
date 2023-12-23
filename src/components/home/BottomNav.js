@@ -23,7 +23,7 @@ const BottomNav = ({ tab, handleTab }) => {
             tab === "Home" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <Entypo name="home" size={24} color="white" />
+          <Entypo name="home" size={tab === "Home" ? 20 : 24} color="white" />
         </View>
       </Pressable>
     );
@@ -38,7 +38,11 @@ const BottomNav = ({ tab, handleTab }) => {
             tab === "History" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <FontAwesome5 name="history" size={24} color="white" />
+          <FontAwesome5
+            name="history"
+            size={tab === "History" ? 20 : 24}
+            color="white"
+          />
         </View>
       </Pressable>
     );
@@ -53,7 +57,11 @@ const BottomNav = ({ tab, handleTab }) => {
             tab === "Chat" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <Ionicons name="chatbubbles-sharp" size={24} color="white" />
+          <Ionicons
+            name="chatbubbles-sharp"
+            size={tab === "Chat" ? 20 : 24}
+            color="white"
+          />
         </View>
       </Pressable>
     );
@@ -68,7 +76,11 @@ const BottomNav = ({ tab, handleTab }) => {
             tab === "Payment" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <MaterialIcons name="payments" size={24} color="white" />
+          <MaterialIcons
+            name="payments"
+            size={tab === "Payment" ? 20 : 24}
+            color="white"
+          />
         </View>
       </Pressable>
     );

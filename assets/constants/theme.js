@@ -3,6 +3,7 @@ const COLORS = {
   lightTheme: "#fff",
   darkPink: "#B5055D",
   faded: "rgba(179, 7, 132, 0.7)",
+  lightFaded: "rgba(179, 7, 132, 0.2)",
   gradient: ["rgba(179, 7, 132, 1)", "rgba(130, 4, 102, 0.5)"],
 };
 
@@ -31,11 +32,12 @@ const SHADOWS = {
     shadowColor: "#B30784",
     shadowOffset: {
       width: 0,
-      height: 5,
+      height: 9,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 5.62,
-    elevation: 7,
+    shadowOpacity: 0.5,
+    shadowRadius: 12.35,
+
+    elevation: 19,
   },
   large: {
     shadowColor: "#B30784",

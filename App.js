@@ -1,10 +1,9 @@
 import "react-native-gesture-handler";
-import { StyleSheet, View, StatusBar, SafeAreaView } from "react-native";
+import { StyleSheet, View, StatusBar, SafeAreaView, Text } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import { RootSiblingParent } from "react-native-root-siblings";
-// import { UserProvider } from "./src/context/UserProvider";
 import theme from "./assets/constants/theme";
 import {
   getThemePreference,
@@ -12,14 +11,22 @@ import {
 } from "./src/preferences/Theme";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Ionicons } from "@expo/vector-icons";
 import { getAsyncToken, saveAsyncToken } from "./src/helper/AsyncStorage";
 import Welcome from "./src/screens/Welcome";
 import Auth from "./src/screens/Auth";
 import Forgot from "./src/screens/Forgot";
-import Terms from "./src/screens/Terms";
 import Home from "./src/screens/Home";
+import Other from "./src/screens/Other";
+import About from "./src/components/other/About";
+import Settings from "./src/components/other/Settings";
+import Terms from "./src/components/other/Terms";
+import SignOut from "./src/components/other/SignOut";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const screenOptions = {
   gestureEnabled: true,
@@ -51,7 +58,7 @@ const screenOptions = {
 export default function App() {
   const [appTheme, setAppTheme] = useState("light");
 
-  const { darkTheme, lightTheme } = theme.COLORS;
+  const { gradient, darkPink, faded, lightFaded } = theme.COLORS;
 
   useEffect(() => {
     const prepare = async () => {
@@ -101,18 +108,118 @@ export default function App() {
   }
 
   const safeAreaViewStyle = {
-    backgroundColor: appTheme === "light" ? lightTheme : darkTheme,
+    backgroundColor: darkPink,
   };
 
-  const barStyle = appTheme === "light" ? "dark-content" : "light-content";
+  const barStyle = "light-content";
+
+  const DrawerContent = (props) => {
+    return (
+      <LinearGradient colors={gradient} style={{ flex: 1 }}>
+        {/* Your drawer content here */}
+        {props.children}
+        <Text>Hello</Text>
+      </LinearGradient>
+    );
+  };
+
+  const HomeDrawer = () => {
+    return (
+      <Drawer.Navigator
+        initialRouteName="Home"
+        drawerContent={(props) => <DrawerContent {...props} />}
+        screenOptions={{
+          drawerStyle: {
+            // backgroundColor: "transparent",
+            headerShown: false,
+            drawerActiveTintColor: darkPink,
+            drawerInactiveTintColor: "black",
+            drawerActiveBackgroundColor: lightFaded,
+            drawerLabelStyle: {
+              fontSize: 16,
+              fontFamily: "Prociono",
+            },
+          },
+        }}
+      >
+        <Drawer.Screen
+          name="Home"
+          component={Home}
+          options={{
+            drawerIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? "ios-home" : "ios-home-outline"}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="About"
+          component={About}
+          options={{
+            drawerIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={
+                  focused ? "information-circle" : "information-circle-outline"
+                }
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            drawerIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? "ios-settings" : "ios-settings-outline"}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Terms"
+          component={Terms}
+          options={{
+            drawerIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? "book" : "book-outline"}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Logout"
+          component={SignOut}
+          options={{
+            drawerIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? "log-out" : "log-out-outline"}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+      </Drawer.Navigator>
+    );
+  };
 
   return (
     <RootSiblingParent>
       <View style={styles.container} onLayout={onLayoutRootView}>
-        <StatusBar backgroundColor={"transparent"} barStyle={barStyle} />
+        <StatusBar backgroundColor={darkPink} barStyle={barStyle} />
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Home"
+            initialRouteName="HomeDrawer"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="Welcome" component={Welcome} />
@@ -126,10 +233,10 @@ export default function App() {
               component={Forgot}
               options={screenOptions}
             />
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
             <Stack.Screen
-              name="Terms"
-              component={Terms}
+              name="Other"
+              component={Other}
               options={screenOptions}
             />
           </Stack.Navigator>
