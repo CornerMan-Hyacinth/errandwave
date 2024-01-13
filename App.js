@@ -24,6 +24,8 @@ import Settings from "./src/components/other/Settings";
 import Terms from "./src/components/other/Terms";
 import SignOut from "./src/components/other/SignOut";
 import { LinearGradient } from "expo-linear-gradient";
+import ChatRoom from "./src/screens/ChatRoom";
+import Request from "./src/screens/Request";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -127,18 +129,16 @@ export default function App() {
     return (
       <Drawer.Navigator
         initialRouteName="Home"
-        drawerContent={(props) => <DrawerContent {...props} />}
+        // drawerContent={(props) => <DrawerContent {...props} />}
         screenOptions={{
-          drawerStyle: {
-            // backgroundColor: "transparent",
-            headerShown: false,
-            drawerActiveTintColor: darkPink,
-            drawerInactiveTintColor: "black",
-            drawerActiveBackgroundColor: lightFaded,
-            drawerLabelStyle: {
-              fontSize: 16,
-              fontFamily: "Prociono",
-            },
+          // backgroundColor: "transparent",
+          headerShown: false,
+          drawerActiveTintColor: darkPink,
+          drawerInactiveTintColor: "black",
+          drawerActiveBackgroundColor: lightFaded,
+          drawerLabelStyle: {
+            fontSize: 16,
+            fontFamily: "Prociono",
           },
         }}
       >
@@ -219,7 +219,7 @@ export default function App() {
         <StatusBar backgroundColor={darkPink} barStyle={barStyle} />
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="HomeDrawer"
+            initialRouteName="Request"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="Welcome" component={Welcome} />
@@ -234,6 +234,8 @@ export default function App() {
               options={screenOptions}
             />
             <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
+            <Stack.Screen name="Chat" component={ChatRoom} />
+            <Stack.Screen name="Request" component={Request} />
             <Stack.Screen
               name="Other"
               component={Other}

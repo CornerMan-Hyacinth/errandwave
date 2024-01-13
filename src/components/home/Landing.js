@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import theme from "../../../assets/constants/theme";
+import OrderBox from "../general/OrderBox";
 
 const Landing = () => {
   const { medium } = theme.SHADOWS;
@@ -46,11 +47,40 @@ const Landing = () => {
         </View>
       </View>
 
+      <Text style={[styles.prevText, { marginTop: 30 }]}>
+        Choose a category
+      </Text>
+
+      <View style={styles.catFlex}>
+        <Pressable style={styles.catBox}>
+          <Text style={styles.catText}>Shopping</Text>
+        </Pressable>
+        <Pressable style={styles.catBox}>
+          <Text style={styles.catText}>Meals</Text>
+        </Pressable>
+        <Pressable style={styles.catBox}>
+          <Text style={styles.catText}>Laundry</Text>
+        </Pressable>
+        <Pressable style={styles.catBox}>
+          <Text style={styles.catText}>Delivery</Text>
+        </Pressable>
+        <Pressable style={styles.catBox}>
+          <Text style={styles.catText}>Others</Text>
+        </Pressable>
+      </View>
+
       <View style={styles.prevFlex}>
         <Text style={styles.prevText}>Previous Orders</Text>
         <Pressable>
           <Text style={[styles.prevMore, { color: faded }]}>show more</Text>
         </Pressable>
+      </View>
+
+      <View style={styles.orderBoxWidget}>
+        <OrderBox status={"pending"} />
+        <OrderBox status={"ongoing"} />
+        <OrderBox status={"delivered"} />
+        <OrderBox status={"canceled"} />
       </View>
     </View>
   );
@@ -118,15 +148,41 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 30,
+    marginTop: 50,
   },
   prevText: {
-    fontFamily: "LatoLight",
-    fontSize: 18,
+    fontFamily: "LatoRegular",
+    fontSize: 16,
   },
   prevMore: {
     fontFamily: "Prociono",
     fontSize: 14,
     textDecorationLine: "underline",
+  },
+  orderBoxWidget: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  catFlex: {
+    marginTop: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+  },
+  catBox: {
+    width: 95,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#4D0127",
+    marginEnd: 15,
+    marginBottom: 15,
+    borderRadius: 10,
+  },
+  catText: {
+    fontFamily: "LatoBold",
+    fontSize: 16,
+    color: "white",
   },
 });

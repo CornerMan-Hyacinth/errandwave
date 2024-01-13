@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import Header from "../components/home/Header";
 import BottomNav from "../components/home/BottomNav";
 import theme from "../../assets/constants/theme";
@@ -53,7 +53,12 @@ const Home = () => {
         )}
       </View>
 
-      {renderTabs()}
+      <ScrollView
+        style={{ flex: 1, marginBottom: 60 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {renderTabs()}
+      </ScrollView>
 
       <BottomNav tab={tab} handleTab={handleTab} />
     </View>
