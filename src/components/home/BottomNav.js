@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import {
   Entypo,
+  FontAwesome,
   FontAwesome5,
   Ionicons,
-  MaterialIcons,
 } from "@expo/vector-icons";
 import theme from "../../../assets/constants/theme";
 
@@ -23,7 +23,7 @@ const BottomNav = ({ tab, handleTab }) => {
             tab === "Home" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <Entypo name="home" size={tab === "Home" ? 20 : 24} color="white" />
+          <Entypo name="home" size={tab === "Home" ? 15 : 20} color="white" />
         </View>
       </Pressable>
     );
@@ -40,7 +40,7 @@ const BottomNav = ({ tab, handleTab }) => {
         >
           <FontAwesome5
             name="history"
-            size={tab === "History" ? 20 : 24}
+            size={tab === "History" ? 15 : 20}
             color="white"
           />
         </View>
@@ -59,7 +59,7 @@ const BottomNav = ({ tab, handleTab }) => {
         >
           <Ionicons
             name="chatbubbles-sharp"
-            size={tab === "Chat" ? 20 : 24}
+            size={tab === "Chat" ? 15 : 20}
             color="white"
           />
         </View>
@@ -67,18 +67,18 @@ const BottomNav = ({ tab, handleTab }) => {
     );
   };
 
-  const Payment = () => {
+  const Account = () => {
     return (
-      <Pressable onPress={() => handleTab("Payment")}>
+      <Pressable onPress={() => handleTab("Account")}>
         <View
           style={[
             styles.iconWidget,
-            tab === "Payment" && { backgroundColor: blackBg.backgroundColor },
+            tab === "Account" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <MaterialIcons
-            name="payments"
-            size={tab === "Payment" ? 20 : 24}
+          <FontAwesome
+            name="user"
+            size={tab === "Account" ? 15 : 20}
             color="white"
           />
         </View>
@@ -91,7 +91,7 @@ const BottomNav = ({ tab, handleTab }) => {
       <Home />
       <History />
       <Chat />
-      <Payment />
+      <Account />
     </View>
   );
 };

@@ -1,16 +1,16 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef } from "react";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
-import theme from "../../../assets/constants/theme";
+import theme from "../../../../assets/constants/theme";
 
-const Meetup = ({ locationValue, updateLocation }) => {
+const Delivery = ({ locationValue, updateLocation, meetupLocation }) => {
   const { darkPink } = theme.COLORS;
 
   const inputRef = useRef(null);
 
   return (
     <View style={{ flex: 1 }}>
-      <Text style={styles.title}>Enter a meetup location</Text>
+      <Text style={styles.title}>Enter a delivery location</Text>
 
       <View style={styles.inputWidget}>
         <Entypo name="location-pin" size={30} color={darkPink} />
@@ -18,7 +18,7 @@ const Meetup = ({ locationValue, updateLocation }) => {
           autoCapitalize="words"
           autoFocus={true}
           placeholder="e.g. Front Gate, Grace Lodge"
-          onChangeText={(text) => updateLocation("meetup", text)}
+          onChangeText={(text) => updateLocation("delivery", text)}
           ref={inputRef}
           style={styles.input}
           value={locationValue}
@@ -34,7 +34,7 @@ const Meetup = ({ locationValue, updateLocation }) => {
   );
 };
 
-export default Meetup;
+export default Delivery;
 
 const styles = StyleSheet.create({
   title: {

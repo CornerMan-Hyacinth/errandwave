@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import theme from "../../../assets/constants/theme";
+import theme from "../../../../assets/constants/theme";
 import AnimatedLottieView from "lottie-react-native";
 import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -24,7 +24,7 @@ const Success = () => {
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
         <AnimatedLottieView
-          source={require("../../../assets/lotties/success_animation.json")}
+          source={require("../../../../assets/lotties/success_animation.json")}
           autoPlay
           loop={false}
           style={styles.lottie}

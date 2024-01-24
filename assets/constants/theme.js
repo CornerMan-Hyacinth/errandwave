@@ -3,7 +3,7 @@ const COLORS = {
   lightTheme: "#fff",
   darkPink: "#B5055D",
   faded: "rgba(179, 7, 132, 0.7)",
-  lightFaded: "rgba(179, 7, 132, 0.2)",
+  lightFaded: "rgba(179, 7, 132, 0.05)",
   gradient: ["rgba(179, 7, 132, 1)", "rgba(130, 4, 102, 0.5)"],
 };
 

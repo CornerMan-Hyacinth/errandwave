@@ -1,7 +1,18 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import theme from "../../../../assets/constants/theme";
 
-const Category = ({ updateCategory }) => {
+const Category = ({ updateCategory, handleNext }) => {
+  const { darkPink } = theme.COLORS;
+
   const [category, setCategory] = useState("");
 
   useEffect(() => {
@@ -9,7 +20,16 @@ const Category = ({ updateCategory }) => {
   }, [category]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
+      <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
+
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Request an errand</Text>
+      </View>
+
       <Text style={styles.title}>Choose a category</Text>
 
       <View style={styles.catFlex}>
@@ -37,13 +57,16 @@ const Category = ({ updateCategory }) => {
         >
           <Text style={styles.catText}>Delivery</Text>
         </Pressable>
-        <Pressable
-          style={[styles.catBox, category === "other" && { opacity: 1 }]}
-          onPress={() => setCategory("other")}
-        >
-          <Text style={styles.catText}>Other</Text>
-        </Pressable>
       </View>
+
+      <Pressable
+        style={[styles.btn, { backgroundColor: darkPink }]}
+        onPress={handleNext}
+      >
+        <Text style={styles.btnText}>Next</Text>
+
+        <MaterialIcons name="navigate-next" size={24} color="white" />
+      </Pressable>
     </View>
   );
 };
@@ -51,6 +74,21 @@ const Category = ({ updateCategory }) => {
 export default Category;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: 50,
+  },
+  headerText: {
+    fontFamily: "Prociono",
+    fontSize: 16,
+    marginStart: 15,
+  },
   title: {
     fontFamily: "LatoRegular",
     fontSize: 20,
@@ -78,5 +116,24 @@ const styles = StyleSheet.create({
     fontFamily: "LatoBold",
     fontSize: 16,
     color: "white",
+  },
+  btn: {
+    position: "absolute",
+    bottom: 15,
+    right: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 45,
+    width: 105,
+    borderRadius: 5,
+    borderTopEndRadius: 20,
+    borderBottomEndRadius: 20,
+    backgroundColor: "rgba(0, 0, 0, .8)",
+  },
+  btnText: {
+    color: "white",
+    fontFamily: "LatoRegular",
+    fontSize: 18,
   },
 });

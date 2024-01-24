@@ -6,7 +6,7 @@ import theme from "../../assets/constants/theme";
 import Landing from "../components/home/Landing";
 import History from "../components/home/History";
 import Chat from "../components/home/Chat";
-import Payments from "../components/home/Payments";
+import Account from "../components/home/Account";
 
 const Home = () => {
   const { darkPink } = theme.COLORS;
@@ -30,8 +30,8 @@ const Home = () => {
       case "Chat":
         return <Chat />;
 
-      case "Payment":
-        return <Payments />;
+      case "Account":
+        return <Account />;
 
       default:
         break;
@@ -44,7 +44,7 @@ const Home = () => {
 
       <View style={styles.headTitle}>
         <Text style={styles.headTitleText}>{tab}</Text>
-        {tab !== "Chat" && (
+        {tab === "Home" && (
           <Pressable style={[styles.requestBtn, { borderColor: darkPink }]}>
             <Text style={[styles.requestText, { color: darkPink }]}>
               Request
