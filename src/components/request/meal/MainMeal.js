@@ -12,9 +12,10 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
 import Delivery from "../general/Delivery";
 import Confirm from "../general/Confirm";
-import Explore from "./Explore";
+import Eatery from "./Eatery";
+import Order from "./Order";
 
-const Main = ({ handleCat }) => {
+const MainMeal = ({ handleCat }) => {
   const navigation = useNavigation();
   const { darkPink } = theme.COLORS;
   const [step, setStep] = useState(1);
@@ -42,15 +43,19 @@ const Main = ({ handleCat }) => {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <Explore />;
+        return <Eatery />;
+
       case 2:
+        return <Order />;
+
+      case 3:
         return (
           <Delivery
             locationValue={requestEntry.delivery}
             updateLocation={handleRequestEntry}
           />
         );
-      case 3:
+      case 4:
         return <Confirm />;
       default:
         break;
@@ -59,8 +64,6 @@ const Main = ({ handleCat }) => {
 
   return (
     <View style={[styles.container, step < 6 && { paddingHorizontal: 15 }]}>
-      <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
-
       {step < 6 && (
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -112,7 +115,7 @@ const Main = ({ handleCat }) => {
   );
 };
 
-export default Main;
+export default MainMeal;
 
 const styles = StyleSheet.create({
   container: {

@@ -14,13 +14,29 @@ const PickerField = ({ data, value, field, updateField }) => {
       case "gender":
         return "Gender";
 
+      case "meal":
+        return "Meal";
+
       default:
         break;
     }
   };
 
-  const topValue =
-    field === "school" ? "Choose your school" : "Choose your gender";
+  const topValue = () => {
+    switch (field) {
+      case "school":
+        return "Choose your school";
+
+      case "gender":
+        return "Choose your gender";
+
+      case "meal":
+        return "Select a meal";
+
+      default:
+        break;
+    }
+  };
 
   const renderData = data.map((item, index) => (
     <Picker.Item
