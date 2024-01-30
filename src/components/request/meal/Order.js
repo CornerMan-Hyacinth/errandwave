@@ -1,15 +1,20 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import theme from "../../../../assets/constants/theme";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 import mealData from "../../../helper/mealData";
 import { Picker } from "@react-native-picker/picker";
-
 const { darkPink } = theme.COLORS;
 
-const Order = () => {
+const Order = ({ updateAllOrders }) => {
   const [mealOrder, updateMealOrder] = useState([]);
   const [cellCount, setCellCount] = useState(1);
+  const [orderCells, setOrderCells] = useState([]);
+
+  useEffect(() => {
+    // Update orderCells whenever cellCount changes
+    setOrderCells([...Array(cellCount)].map((_, index) => ({ index })));
+  }, [cellCount]); // Trigger effect when cellCount changes
 
   const addNewOrder = async (newOrder, index) => {
     const mealExists = mealOrder.some(
@@ -23,17 +28,11 @@ const Order = () => {
       newMealOrder[index] = await newOrder;
 
       updateMealOrder(newMealOrder);
+      await updateAllOrders(newOrder);
     } else {
       updateMealOrder((prevOrder) => [...prevOrder, newOrder]);
+      await updateAllOrders(mealOrder);
     }
-  };
-
-  const testSomething = () => {
-    setTimeout(() => {
-      // console.log(`Added new meal: ${newOrder}`);
-      console.log(`All: ${mealOrder}`);
-      console.log(`Number of meals: ${mealOrder.length}`);
-    }, 1000);
   };
 
   const modifyOrder = async (orderIndex, valueIndex, newValue) => {
@@ -47,22 +46,44 @@ const Order = () => {
     }
 
     updateMealOrder(newOrder);
+    await updateAllOrders(mealOrder);
   };
 
-  const duplicateOrderCell = () => setCellCount((prevCount) => prevCount + 1);
+  const deleteOrder = async (indexToDelete) => {
+    const order = [...mealOrder];
+    if (order[indexToDelete] !== undefined) {
+      order.splice(indexToDelete, 1);
+    }
+
+    // decrease the number of order cells
+    setCellCount((prevCount) => prevCount - 1);
+
+    // this will clear and delete that cell block
+    setOrderCells(orderCells.filter((cell) => cell.index !== indexToDelete));
+    updateMealOrder(order);
+
+    // updating the order within the parent component
+    await updateAllOrders(order);
+  };
+
+  const duplicateOrderCell = () => {
+    setCellCount((prevCount) => prevCount + 1);
+    console.log(cellCount);
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Place your order</Text>
 
       <View style={{ marginTop: 5 }}>
-        {[...Array(cellCount)].map((_, index) => (
+        {orderCells.map((cell, index) => (
           <OrderCell
             key={index}
             index={index}
             data={mealData}
             addOrder={addNewOrder}
             modifyOrder={modifyOrder}
+            onDelete={() => deleteOrder(cell.index)}
           />
         ))}
       </View>
@@ -86,7 +107,7 @@ const Order = () => {
   );
 };
 
-const OrderCell = ({ index, data, addOrder, modifyOrder }) => {
+const OrderCell = ({ index, data, addOrder, modifyOrder, onDelete }) => {
   const [order, updateOrder] = useState({
     meal: "",
     price: 0,
@@ -120,7 +141,6 @@ const OrderCell = ({ index, data, addOrder, modifyOrder }) => {
   const handlePrice = async (btn, index) => {
     const oldPrice = order.price;
     const incremental = data[getMealIndex(order.meal)].incremental;
-    console.log(incremental);
 
     switch (btn) {
       case "plus":
@@ -159,6 +179,14 @@ const OrderCell = ({ index, data, addOrder, modifyOrder }) => {
 
   return (
     <View style={styles.cell}>
+      <Pressable style={styles.deleteBtn} onPress={() => onDelete()}>
+        <FontAwesome6
+          name="delete-left"
+          size={24}
+          color={"rgba(0, 0, 0, .7)"}
+        />
+      </Pressable>
+
       <View style={[styles.mealCell, { marginEnd: 20, borderColor: darkPink }]}>
         <View style={styles.topLabel}>
           <Text style={[styles.topLabelText, { color: darkPink }]}>Meals</Text>
@@ -206,6 +234,8 @@ const OrderCell = ({ index, data, addOrder, modifyOrder }) => {
           />
         </Pressable>
       </View>
+
+      <View style={styles.breakLine} />
     </View>
   );
 };
@@ -220,14 +250,29 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     fontSize: 20,
     marginTop: 15,
+    marginBottom: 5,
     color: "black",
   },
   cell: {
-    marginTop: 25,
+    marginTop: 35,
     flexDirection: "row",
     justifyContent: "space-between",
-    overflow: "hidden",
-    paddingVertical: 5,
+    // overflow: "hidden",
+    paddingTop: 5,
+    paddingBottom: 15,
+  },
+  deleteBtn: {
+    position: "absolute",
+    top: -25,
+    right: 0,
+    paddingVertical: 2,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+  },
+  deleteText: {
+    fontFamily: "Prociono",
+    fontSize: 12,
+    color: "white",
   },
   mealCell: {
     width: 170,
@@ -275,5 +320,12 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: 20,
+  },
+  breakLine: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: 1,
+    backgroundColor: "rgba(0, 0, 0, .7)",
   },
 });

@@ -26,6 +26,7 @@ import SignOut from "./src/components/other/SignOut";
 import { LinearGradient } from "expo-linear-gradient";
 import ChatRoom from "./src/screens/ChatRoom";
 import Request from "./src/screens/Request";
+import Payment from "./src/screens/Payment";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -97,6 +98,7 @@ export default function App() {
     LatoBold: require("./assets/fonts/lato/Lato-Bold.ttf"),
     LatoLight: require("./assets/fonts/lato/Lato-Light.ttf"),
     LatoThin: require("./assets/fonts/lato/Lato-Thin.ttf"),
+    Courgette: require("./assets/fonts/courgette/Courgette-Regular.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -219,7 +221,7 @@ export default function App() {
         <StatusBar backgroundColor={darkPink} barStyle={barStyle} />
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Request"
+            initialRouteName="Payment"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="Welcome" component={Welcome} />
@@ -236,6 +238,11 @@ export default function App() {
             <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
             <Stack.Screen name="Chat" component={ChatRoom} />
             <Stack.Screen name="Request" component={Request} />
+            <Stack.Screen
+              name="Payment"
+              component={Payment}
+              options={screenOptions}
+            />
             <Stack.Screen
               name="Other"
               component={Other}

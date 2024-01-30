@@ -33,7 +33,7 @@ export const removeAsyncToken = async (key) => {
   }
 };
 
-export const removeAllAsyncTokens = async (key) => {
+export const removeAllAsyncTokens = async () => {
   try {
     await AsyncStorage.clear();
     console.log("Successfully cleared Async storage");

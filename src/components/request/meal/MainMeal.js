@@ -1,12 +1,14 @@
 import {
+  Image,
   Pressable,
-  StatusBar,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
@@ -14,16 +16,20 @@ import Delivery from "../general/Delivery";
 import Confirm from "../general/Confirm";
 import Eatery from "./Eatery";
 import Order from "./Order";
+import { LinearGradient } from "expo-linear-gradient";
 
 const MainMeal = ({ handleCat }) => {
   const navigation = useNavigation();
-  const { darkPink } = theme.COLORS;
+  const { darkPink, lightFaded, gradient } = theme.COLORS;
+
+  const sheetRef = useRef(null);
+
   const [step, setStep] = useState(1);
   const [requestEntry, updateRequestEntry] = useState({
-    category: "",
-    meetup: "",
-    delivery: "",
-    priceRange: "",
+    eatery: "",
+    meal: [],
+    totalPrice: "",
+    deliveryLocation: "",
   });
 
   const handleRequestEntry = (field, value) => {
@@ -32,7 +38,11 @@ const MainMeal = ({ handleCat }) => {
   };
 
   const handleNext = () => {
-    if (step >= 1 && step < 3) {
+    if (step === 2) {
+      sheetRef.current.open();
+    } else if (step === 4) {
+      // navigate to payment
+    } else {
       setStep((prevStep) => prevStep + 1);
     }
   };
@@ -40,13 +50,25 @@ const MainMeal = ({ handleCat }) => {
   const handleBack = () =>
     step === 1 ? handleCat() : setStep((prevStep) => prevStep - 1);
 
+  const handleConfirmOrder = () => {
+    sheetRef.current.close();
+    setTimeout(() => {
+      setStep((prevStep) => prevStep + 1);
+    }, 500);
+  };
+
+  // this function sets the meal orders to the useState
+  const handleAllOrders = (allOrders) =>
+    updateRequestEntry((prevEntry) => ({ ...prevEntry, meal: allOrders }));
+
+  // displays a component based on the step the user is currently in
   const renderStep = () => {
     switch (step) {
       case 1:
         return <Eatery />;
 
       case 2:
-        return <Order />;
+        return <Order updateAllOrders={handleAllOrders} />;
 
       case 3:
         return (
@@ -61,6 +83,10 @@ const MainMeal = ({ handleCat }) => {
         break;
     }
   };
+
+  const renderMealItems = requestEntry.meal.map((item, index) => (
+    <OrderItem key={index} item={item[0]} price={item[1]} />
+  ));
 
   return (
     <View style={[styles.container, step < 6 && { paddingHorizontal: 15 }]}>
@@ -104,13 +130,79 @@ const MainMeal = ({ handleCat }) => {
             ]}
             onPress={handleNext}
           >
-            <Text style={styles.btnText}>{step === 3 ? "Finish" : "Next"}</Text>
-            {step !== 5 && (
+            <Text style={styles.btnText}>{step === 4 ? "Finish" : "Next"}</Text>
+            {step !== 4 && (
               <MaterialIcons name="navigate-next" size={24} color="white" />
             )}
           </Pressable>
         </View>
       )}
+
+      <BottomSheet
+        ref={sheetRef}
+        animationType="spring"
+        dragHandleStyle={{ backgroundColor: darkPink }}
+        height={400}
+        hideDragHandle
+      >
+        <View style={[styles.bottomSheet]}>
+          <LinearGradient
+            colors={gradient}
+            start={{ x: -1, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            locations={[0, 1]}
+            style={styles.sheetContainer}
+          >
+            <Text style={styles.sheetTitle}>Confirm your order</Text>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {renderMealItems}
+            </ScrollView>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 15,
+              }}
+            >
+              <Text style={styles.totalText}>Total -</Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Image
+                  source={require("../../../../assets/icons/naira_icon.png")}
+                  style={styles.itemIcon}
+                />
+                <Text style={styles.itemPrice}>400</Text>
+              </View>
+            </View>
+
+            <Pressable style={styles.confirmBtn} onPress={handleConfirmOrder}>
+              <Text style={[styles.confirmText, { color: darkPink }]}>
+                Confirm
+              </Text>
+            </Pressable>
+          </LinearGradient>
+        </View>
+      </BottomSheet>
+    </View>
+  );
+};
+
+const OrderItem = ({ item, price }) => {
+  return (
+    <View style={styles.itemList}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text numberOfLines={1} style={styles.itemName}>
+          {item}
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image
+            source={require("../../../../assets/icons/naira_icon.png")}
+            style={styles.itemIcon}
+          />
+          <Text style={styles.itemPrice}>{price}</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -153,5 +245,61 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "LatoRegular",
     fontSize: 18,
+  },
+  bottomSheet: {
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, .7)",
+  },
+  sheetContainer: {
+    flex: 1,
+    paddingTop: 30,
+    paddingHorizontal: 15,
+  },
+  sheetTitle: {
+    fontFamily: "Prociono",
+    fontSize: 18,
+    marginBottom: 30,
+    color: "white",
+  },
+  itemList: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  itemName: {
+    width: 100,
+    color: "white",
+    marginEnd: 20,
+    fontFamily: "LatoRegular",
+    fontSize: 16,
+  },
+  itemIcon: {
+    tintColor: "white",
+  },
+  itemPrice: {
+    color: "white",
+    fontFamily: "LatoRegular",
+    fontSize: 16,
+    marginStart: 3,
+  },
+  totalText: {
+    fontFamily: "Prociono",
+    fontSize: 16,
+    color: "white",
+    marginEnd: 5,
+  },
+  confirmBtn: {
+    backgroundColor: "white",
+    width: "70%",
+    alignSelf: "center",
+    alignItems: "center",
+    marginBottom: 15,
+    borderRadius: 20,
+    paddingVertical: 10,
+  },
+  confirmText: {
+    fontFamily: "Prociono",
+    fontSize: 16,
   },
 });

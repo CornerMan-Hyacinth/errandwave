@@ -29,6 +29,9 @@ const InputField = ({ field, value, updateField, autoFocus }) => {
       case "confirmPassword":
         return "Confirm password";
 
+      case "recipient":
+        return "Recipient's name";
+
       default:
         break;
     }
@@ -41,7 +44,11 @@ const InputField = ({ field, value, updateField, autoFocus }) => {
       </View>
 
       <View
-        style={[styles.inputWrapper, isFocused && { borderColor: darkPink }]}
+        style={[
+          styles.inputWrapper,
+          isFocused && { borderColor: darkPink },
+          field === "recipient" && { alignSelf: "flex-start" },
+        ]}
       >
         <TextInput
           autoCapitalize="none"

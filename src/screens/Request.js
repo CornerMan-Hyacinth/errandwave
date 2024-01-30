@@ -3,6 +3,8 @@ import React, { useState } from "react";
 // import MainShopping from "../components/request/shopping/Main";
 import Category from "../components/request/general/Category";
 import MainMeal from "../components/request/meal/MainMeal";
+import MainParcel from "../components/request/parcel/MainParcel";
+import MainLaundry from "../components/request/laundry/MainLaundry";
 
 const Request = () => {
   const [isOrigin, setOrigin] = useState(false);
@@ -23,6 +25,8 @@ const Request = () => {
       ) : (
         // <MainShopping handleCat={handleCat} />
         <MainMeal handleCat={handleCat} />
+        // <MainParcel handleCat={handleCat} />
+        // <MainLaundry handleCat={handleCat} />
       )}
     </View>
   );

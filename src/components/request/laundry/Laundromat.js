@@ -1,46 +1,43 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
 
-const Eatery = () => {
-  const [eatery, setEatery] = useState("");
+const { darkPink, faded, lightFaded } = theme.COLORS;
 
-  const handleValue = (value) => setEatery(value);
+const Laundromat = () => {
+  const [selected, setSelected] = useState("");
+
+  const handleSelect = (value) => {
+    selected === value ? setSelected("") : setSelected(value);
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Choose an eatery</Text>
+    <View style={{ flex: 1 }}>
+      <Text style={styles.title}>Choose a laundromat</Text>
 
       <View style={{ marginTop: 30 }}>
-        <EateryCell
-          value={eatery}
-          updateValue={handleValue}
-          title={"Munch & Mingle"}
-          owner={"Eze Coliins"}
+        <LaundromatCell
+          title={"ExpressWash Solutions"}
+          selected={selected}
+          setSelected={handleSelect}
+          owner={"Felix Nwachi"}
         />
 
-        <EateryCell
-          value={eatery}
-          updateValue={handleValue}
-          title={"Plateful Delight"}
-        />
-
-        <EateryCell
-          value={eatery}
-          updateValue={handleValue}
-          title={"Biastro Bliss"}
+        <LaundromatCell
+          title={"PurePress Laundry"}
+          selected={selected}
+          setSelected={handleSelect}
+          owner={"Dani Owe"}
         />
       </View>
     </View>
   );
 };
 
-const EateryCell = ({ title, value, updateValue, owner }) => {
-  const { darkPink, lightFaded } = theme.COLORS;
-
+const LaundromatCell = ({ title, selected, setSelected, owner }) => {
   const textColor = {
-    color: value === title ? "#FFFFFF" : "#000000",
+    color: selected === title ? "#FFFFFF" : "#000000",
   };
 
   const [expand, setExpand] = useState(false);
@@ -49,11 +46,11 @@ const EateryCell = ({ title, value, updateValue, owner }) => {
     <Pressable
       style={[
         styles.cell,
-        value === title
+        selected === title
           ? { backgroundColor: faded }
           : { backgroundColor: lightFaded },
       ]}
-      onPress={() => updateValue(title)}
+      onPress={() => setSelected(title)}
     >
       <View style={styles.cellTop}>
         <View style={styles.logo}>
@@ -95,12 +92,9 @@ const EateryCell = ({ title, value, updateValue, owner }) => {
   );
 };
 
-export default Eatery;
+export default Laundromat;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   title: {
     fontFamily: "LatoRegular",
     fontSize: 20,
