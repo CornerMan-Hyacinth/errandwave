@@ -17,6 +17,7 @@ import Confirm from "../general/Confirm";
 import Eatery from "./Eatery";
 import Order from "./Order";
 import { LinearGradient } from "expo-linear-gradient";
+import { useEffect } from "react";
 
 const MainMeal = ({ handleCat }) => {
   const navigation = useNavigation();
@@ -31,6 +32,12 @@ const MainMeal = ({ handleCat }) => {
     totalPrice: "",
     deliveryLocation: "",
   });
+  const [isToastVisible, setToastVisible] = useState(false);
+
+  const showToast = () => {
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 2000); // Hide toast after 2 seconds
+  };
 
   const handleRequestEntry = (field, value) => {
     updateRequestEntry((prevEntry) => ({ ...prevEntry, [field]: value }));
@@ -39,7 +46,13 @@ const MainMeal = ({ handleCat }) => {
 
   const handleNext = () => {
     if (step === 2) {
-      sheetRef.current.open();
+      if (requestEntry.meal.length === 0) {
+        showToast();
+      } else {
+        sheetRef.current.open();
+      }
+    } else if (step === 1 && requestEntry.eatery === "") {
+      showToast();
     } else if (step === 4) {
       // navigate to payment
     } else {
@@ -58,17 +71,29 @@ const MainMeal = ({ handleCat }) => {
   };
 
   // this function sets the meal orders to the useState
-  const handleAllOrders = (allOrders) =>
+  const handleAllOrders = (allOrders) => {
     updateRequestEntry((prevEntry) => ({ ...prevEntry, meal: allOrders }));
+    console(allOrders);
+  };
 
   // displays a component based on the step the user is currently in
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <Eatery />;
+        return (
+          <Eatery
+            isToastVisible={isToastVisible}
+            updateEatery={handleRequestEntry}
+          />
+        );
 
       case 2:
-        return <Order updateAllOrders={handleAllOrders} />;
+        return (
+          <Order
+            isToastVisible={isToastVisible}
+            updateAllOrders={handleAllOrders}
+          />
+        );
 
       case 3:
         return (

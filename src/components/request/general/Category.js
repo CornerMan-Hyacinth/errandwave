@@ -1,4 +1,5 @@
 import {
+  Image,
   Pressable,
   StatusBar,
   StyleSheet,
@@ -6,18 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
+import { useNavigation } from "@react-navigation/native";
 
-const Category = ({ updateCategory, handleNext }) => {
+const Category = ({ updateCategory }) => {
+  const navigation = useNavigation();
   const { darkPink } = theme.COLORS;
 
-  const [category, setCategory] = useState("");
-
-  useEffect(() => {
-    updateCategory("category", category);
-  }, [category]);
+  const handleCategory = (category) => {
+    updateCategory(category);
+  };
 
   return (
     <View style={styles.container}>
@@ -34,39 +35,43 @@ const Category = ({ updateCategory, handleNext }) => {
 
       <View style={styles.catFlex}>
         <Pressable
-          style={[styles.catBox, category === "shopping" && { opacity: 1 }]}
-          onPress={() => setCategory("shopping")}
+          style={[styles.catBox]}
+          onPress={() => handleCategory("shopping")}
         >
+          <Entypo name="shopping-bag" size={20} color="white" />
           <Text style={styles.catText}>Shopping</Text>
         </Pressable>
         <Pressable
-          style={[styles.catBox, category === "meals" && { opacity: 1 }]}
-          onPress={() => setCategory("meals")}
+          style={[styles.catBox]}
+          onPress={() => handleCategory("meal")}
         >
+          <Image
+            source={require("../../../../assets/icons/icon_meal.png")}
+            style={styles.catImage}
+          />
           <Text style={styles.catText}>Meals</Text>
         </Pressable>
         <Pressable
-          style={[styles.catBox, category === "laundry" && { opacity: 1 }]}
-          onPress={() => setCategory("laundry")}
+          style={[styles.catBox]}
+          onPress={() => handleCategory("laundry")}
         >
+          <Image
+            source={require("../../../../assets/icons/icon_laundry.png")}
+            style={styles.catImage}
+          />
           <Text style={styles.catText}>Laundry</Text>
         </Pressable>
         <Pressable
-          style={[styles.catBox, category === "delivery" && { opacity: 1 }]}
-          onPress={() => setCategory("delivery")}
+          style={[styles.catBox]}
+          onPress={() => handleCategory("parcel")}
         >
-          <Text style={styles.catText}>Delivery</Text>
+          <Image
+            source={require("../../../../assets/icons/icon_parcel.png")}
+            style={styles.catImage}
+          />
+          <Text style={styles.catText}>Parcel</Text>
         </Pressable>
       </View>
-
-      <Pressable
-        style={[styles.btn, { backgroundColor: darkPink }]}
-        onPress={handleNext}
-      >
-        <Text style={styles.btnText}>Next</Text>
-
-        <MaterialIcons name="navigate-next" size={24} color="white" />
-      </Pressable>
     </View>
   );
 };
@@ -102,38 +107,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   catBox: {
-    width: 95,
-    height: 60,
+    minWidth: 95,
+    paddingVertical: 15,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#4D0127",
     marginEnd: 15,
-    marginBottom: 15,
+    marginBottom: 30,
     borderRadius: 10,
-    opacity: 0.6,
   },
   catText: {
     fontFamily: "LatoBold",
     fontSize: 16,
     color: "white",
+    marginTop: 5,
   },
-  btn: {
-    position: "absolute",
-    bottom: 15,
-    right: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 45,
-    width: 105,
-    borderRadius: 5,
-    borderTopEndRadius: 20,
-    borderBottomEndRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, .8)",
-  },
-  btnText: {
-    color: "white",
-    fontFamily: "LatoRegular",
-    fontSize: 18,
+  catImage: {
+    width: 20,
+    height: 20,
   },
 });

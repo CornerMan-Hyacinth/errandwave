@@ -8,15 +8,17 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
 import Confirm from "../general/Confirm";
 import Meetup from "./Meetup";
 import Recipient from "./Recipient";
+import Method from "../../payment/Method";
 
 const MainParcel = ({ handleCat }) => {
   const navigation = useNavigation();
   const { darkPink } = theme.COLORS;
+
   const [step, setStep] = useState(1);
   const [requestEntry, updateRequestEntry] = useState({
     meetup: "",
@@ -25,14 +27,20 @@ const MainParcel = ({ handleCat }) => {
     recipientLocation: "",
   });
 
+  const [isModalOn, setModalOn] = useState(false);
+
   const handleRequestEntry = (field, value) => {
     updateRequestEntry((prevEntry) => ({ ...prevEntry, [field]: value }));
-    console.log(`${field}: ${value}`);
+    setTimeout(() => {
+      console.log(requestEntry);
+    }, 500);
   };
 
   const handleNext = () => {
-    if (step >= 1 && step < 4) {
+    if (step >= 1 && step < 3) {
       setStep((prevStep) => prevStep + 1);
+    } else {
+      setModalOn(true);
     }
   };
 
@@ -42,7 +50,7 @@ const MainParcel = ({ handleCat }) => {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <Meetup />;
+        return <Meetup updateLocation={handleRequestEntry} />;
 
       case 2:
         return (
@@ -55,7 +63,7 @@ const MainParcel = ({ handleCat }) => {
         );
 
       case 3:
-        return <Confirm />;
+        return <Confirm page={"parcel"} riderFee={200} total={200} />;
       default:
         break;
     }
@@ -74,42 +82,42 @@ const MainParcel = ({ handleCat }) => {
 
       {renderStep()}
 
-      {step < 6 && (
-        <View style={styles.btnWidget}>
-          <Pressable
-            style={[
-              styles.btn,
-              {
-                left: 0,
-                borderTopStartRadius: 20,
-                borderBottomStartRadius: 20,
-              },
-            ]}
-            onPress={handleBack}
-          >
-            <MaterialIcons name="navigate-before" size={24} color="white" />
-            <Text style={styles.btnText}>Back</Text>
-          </Pressable>
+      <View style={styles.btnWidget}>
+        <Pressable
+          style={[
+            styles.btn,
+            {
+              left: 0,
+              borderTopStartRadius: 20,
+              borderBottomStartRadius: 20,
+            },
+          ]}
+          onPress={handleBack}
+        >
+          <MaterialIcons name="navigate-before" size={24} color="white" />
+          <Text style={styles.btnText}>Back</Text>
+        </Pressable>
 
-          <Pressable
-            style={[
-              styles.btn,
-              {
-                right: 0,
-                borderTopEndRadius: 20,
-                borderBottomEndRadius: 20,
-                backgroundColor: darkPink,
-              },
-            ]}
-            onPress={handleNext}
-          >
-            <Text style={styles.btnText}>{step === 3 ? "Finish" : "Next"}</Text>
-            {step !== 3 && (
-              <MaterialIcons name="navigate-next" size={24} color="white" />
-            )}
-          </Pressable>
-        </View>
-      )}
+        <Pressable
+          style={[
+            styles.btn,
+            {
+              right: 0,
+              borderTopEndRadius: 20,
+              borderBottomEndRadius: 20,
+              backgroundColor: darkPink,
+            },
+          ]}
+          onPress={handleNext}
+        >
+          <Text style={styles.btnText}>{step === 3 ? "Finish" : "Next"}</Text>
+          {step !== 3 && (
+            <MaterialIcons name="navigate-next" size={24} color="white" />
+          )}
+        </Pressable>
+      </View>
+
+      <Method isOn={isModalOn} setOn={() => setModalOn(false)} />
     </View>
   );
 };

@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { BackHandler, StatusBar, StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import theme from "../../../../assets/constants/theme";
 import AnimatedLottieView from "lottie-react-native";
 import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const Success = () => {
+const Success = ({ message }) => {
   const navigation = useNavigation();
   const { gradient } = theme.COLORS;
 
@@ -14,8 +14,25 @@ const Success = () => {
     navigation.navigate("HomeDrawer");
   };
 
+  useEffect(() => {
+    // this useEffect makes sure that if the user clicks on the back button
+    // of his/her device, the app redirects to the home page
+    const backAction = () => {
+      navigation.navigate("HomeDrawer");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
+      <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
       <LinearGradient
         colors={gradient}
         start={{ x: -1, y: 0 }}
@@ -31,7 +48,9 @@ const Success = () => {
         />
 
         <Text style={styles.yay}>Thank you for using{"\n"}ErrandWave</Text>
-        <Text style={styles.success}>Your request has been{"\n"}processed</Text>
+        <Text style={styles.success}>
+          Your {message} request is {"\n"}being processed
+        </Text>
 
         <Pressable style={styles.btn} onPress={handleOk}>
           <Text style={styles.btnText}>Continue</Text>

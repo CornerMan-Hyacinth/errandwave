@@ -7,8 +7,12 @@ import Landing from "../components/home/Landing";
 import History from "../components/home/History";
 import Chat from "../components/home/Chat";
 import Account from "../components/home/Account";
+import { saveAsyncToken } from "../helper/AsyncStorage";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
+  const navigation = useNavigation();
+
   const { darkPink } = theme.COLORS;
   const { medium } = theme.SHADOWS;
 
@@ -17,6 +21,11 @@ const Home = () => {
   const handleTab = (page) => {
     setTab(page);
     console.log(page);
+  };
+
+  const handleRequest = async () => {
+    await saveAsyncToken("request", "none");
+    navigation.navigate("Request");
   };
 
   const renderTabs = () => {
@@ -45,7 +54,10 @@ const Home = () => {
       <View style={styles.headTitle}>
         <Text style={styles.headTitleText}>{tab}</Text>
         {tab === "Home" && (
-          <Pressable style={[styles.requestBtn, { borderColor: darkPink }]}>
+          <Pressable
+            style={[styles.requestBtn, { borderColor: darkPink }]}
+            onPress={handleRequest}
+          >
             <Text style={[styles.requestText, { color: darkPink }]}>
               Request
             </Text>

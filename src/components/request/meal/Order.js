@@ -4,9 +4,10 @@ import theme from "../../../../assets/constants/theme";
 import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 import mealData from "../../../helper/mealData";
 import { Picker } from "@react-native-picker/picker";
+import CustomToast from "../../general/CustomToast";
 const { darkPink } = theme.COLORS;
 
-const Order = ({ updateAllOrders }) => {
+const Order = ({ isToastVisible, updateAllOrders }) => {
   const [mealOrder, updateMealOrder] = useState([]);
   const [cellCount, setCellCount] = useState(1);
   const [orderCells, setOrderCells] = useState([]);
@@ -16,7 +17,7 @@ const Order = ({ updateAllOrders }) => {
     setOrderCells([...Array(cellCount)].map((_, index) => ({ index })));
   }, [cellCount]); // Trigger effect when cellCount changes
 
-  const addNewOrder = async (newOrder, index) => {
+  const addNewOrder = (newOrder, index) => {
     const mealExists = mealOrder.some(
       (innerArray) => innerArray[0] === newOrder[0]
     );
@@ -24,29 +25,58 @@ const Order = ({ updateAllOrders }) => {
     if (mealExists) {
       return new Error("This meal has already being selected!");
     } else if (mealOrder[index] !== undefined) {
-      const newMealOrder = [...mealOrder];
-      newMealOrder[index] = await newOrder;
+      const performAdd = () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const newMealOrder = [...mealOrder];
+            newMealOrder[index] = newOrder;
 
-      updateMealOrder(newMealOrder);
-      await updateAllOrders(newOrder);
+            updateMealOrder(newMealOrder);
+            resolve();
+          }, 500);
+        });
+      };
+
+      performAdd().then(() => {
+        updateAllOrders(mealOrder);
+        // console.log(mealOrder);
+      });
     } else {
-      updateMealOrder((prevOrder) => [...prevOrder, newOrder]);
-      await updateAllOrders(mealOrder);
+      const performAdd = () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            updateMealOrder((prevOrder) => [...prevOrder, newOrder]);
+            resolve();
+          }, 500);
+        });
+      };
+
+      performAdd().then(() => {
+        updateAllOrders(mealOrder);
+        // console.log(newOrder);
+      });
     }
   };
 
-  const modifyOrder = async (orderIndex, valueIndex, newValue) => {
+  const modifyOrder = (orderIndex, valueIndex, newValue) => {
     // Modify the content of the order array at the specified index and itemIndex
-    const newOrder = [...mealOrder];
-    if (
-      newOrder[orderIndex] &&
-      newOrder[orderIndex][valueIndex] !== undefined
-    ) {
-      newOrder[orderIndex][valueIndex] = await newValue;
-    }
+    const performAdd = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const newOrder = [...mealOrder];
+          if (
+            newOrder[orderIndex] &&
+            newOrder[orderIndex][valueIndex] !== undefined
+          ) {
+            newOrder[orderIndex][valueIndex] = newValue;
+          }
+          updateMealOrder(newOrder);
+          resolve();
+        }, 500);
+      });
+    };
 
-    updateMealOrder(newOrder);
-    await updateAllOrders(mealOrder);
+    performAdd().then(() => updateAllOrders(mealOrder));
   };
 
   const deleteOrder = async (indexToDelete) => {
@@ -95,14 +125,12 @@ const Order = ({ updateAllOrders }) => {
         >
           <AntDesign name="plus" size={30} color="white" />
         </Pressable>
-
-        {/* <Pressable
-          style={[styles.cellBtn, { backgroundColor: darkPink }]}
-          onPress={() => testSomething()}
-        >
-          <Text>Check</Text>
-        </Pressable> */}
       </View>
+
+      <CustomToast
+        visible={isToastVisible}
+        message={"Place an order to continue"}
+      />
     </View>
   );
 };
@@ -127,11 +155,10 @@ const OrderCell = ({ index, data, addOrder, modifyOrder, onDelete }) => {
   const handleMeal = async (meal) => {
     const basePrice = data[getMealIndex(meal)].basePrice;
 
-    updateOrder((prevOrder) => ({
-      ...prevOrder,
+    updateOrder({
       meal: meal,
       price: basePrice,
-    }));
+    });
 
     await addOrder([meal, basePrice], index);
   };

@@ -1,12 +1,19 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
 
-const Meetup = ({ locationValue, updateLocation }) => {
+const Meetup = ({ updateLocation }) => {
   const { darkPink } = theme.COLORS;
 
   const inputRef = useRef(null);
+
+  const [location, setLocation] = useState("");
+
+  const handleLocation = (text) => {
+    setLocation(text);
+    updateLocation("meetup", text);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -18,10 +25,10 @@ const Meetup = ({ locationValue, updateLocation }) => {
           autoCapitalize="words"
           autoFocus={true}
           placeholder="e.g. Front Gate, Grace Lodge"
-          onChangeText={(text) => updateLocation("meetup", text)}
+          onChangeText={(text) => handleLocation(text)}
           ref={inputRef}
           style={styles.input}
-          value={locationValue}
+          value={location}
         />
         <Pressable
           style={{ marginStart: 3 }}

@@ -1,13 +1,22 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import theme from "../../../assets/constants/theme";
 import OrderBox from "../general/OrderBox";
 import AnimatedLottieView from "lottie-react-native";
+import { saveAsyncToken } from "../../helper/AsyncStorage";
+import { useNavigation } from "@react-navigation/native";
 
 const Landing = () => {
+  const navigation = useNavigation();
+
   const { medium } = theme.SHADOWS;
   const { darkPink, faded } = theme.COLORS;
+
+  const handleRequest = async (category) => {
+    await saveAsyncToken("request", category);
+    navigation.navigate("Request");
+  };
 
   return (
     <View style={styles.container}>
@@ -45,22 +54,42 @@ const Landing = () => {
         />
       </View>
 
-      <Text style={[styles.prevText, { marginTop: 45 }]}>
-        Request by Category
-      </Text>
+      <Text style={[styles.prevText, { marginTop: 45 }]}>Categories</Text>
 
       <View style={styles.catFlex}>
-        <Pressable style={styles.catBox}>
+        <Pressable
+          style={styles.catBox}
+          onPress={() => handleRequest("shopping")}
+        >
+          <Entypo name="shopping-bag" size={20} color="white" />
           <Text style={styles.catText}>Shopping</Text>
         </Pressable>
-        <Pressable style={styles.catBox}>
+        <Pressable style={styles.catBox} onPress={() => handleRequest("meal")}>
+          <Image
+            source={require("../../../assets/icons/icon_meal.png")}
+            style={styles.catImage}
+          />
           <Text style={styles.catText}>Meals</Text>
         </Pressable>
-        <Pressable style={styles.catBox}>
+        <Pressable
+          style={styles.catBox}
+          onPress={() => handleRequest("laundry")}
+        >
+          <Image
+            source={require("../../../assets/icons/icon_laundry.png")}
+            style={styles.catImage}
+          />
           <Text style={styles.catText}>Laundry</Text>
         </Pressable>
-        <Pressable style={styles.catBox}>
-          <Text style={styles.catText}>Delivery</Text>
+        <Pressable
+          style={styles.catBox}
+          onPress={() => handleRequest("parcel")}
+        >
+          <Image
+            source={require("../../../assets/icons/icon_parcel.png")}
+            style={styles.catImage}
+          />
+          <Text style={styles.catText}>Parcel</Text>
         </Pressable>
       </View>
 
@@ -93,7 +122,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 45,
   },
   cardLeftBox: {
     backgroundColor: "white",
@@ -205,8 +234,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   catBox: {
-    width: 95,
-    height: 60,
+    minWidth: 95,
+    paddingVertical: 15,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#4D0127",
@@ -218,5 +247,10 @@ const styles = StyleSheet.create({
     fontFamily: "LatoBold",
     fontSize: 16,
     color: "white",
+    marginTop: 5,
+  },
+  catImage: {
+    width: 20,
+    height: 20,
   },
 });

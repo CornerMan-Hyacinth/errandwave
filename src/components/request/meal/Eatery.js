@@ -2,11 +2,15 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
+import CustomToast from "../../general/CustomToast";
 
-const Eatery = () => {
+const Eatery = ({ isToastVisible, updateEatery }) => {
   const [eatery, setEatery] = useState("");
 
-  const handleValue = (value) => setEatery(value);
+  const handleValue = (value) => {
+    setEatery(value);
+    updateEatery("eatery", value);
+  };
 
   return (
     <View style={styles.container}>
@@ -32,12 +36,17 @@ const Eatery = () => {
           title={"Biastro Bliss"}
         />
       </View>
+
+      <CustomToast
+        visible={isToastVisible}
+        message={"Choose an eatery to continue"}
+      />
     </View>
   );
 };
 
 const EateryCell = ({ title, value, updateValue, owner }) => {
-  const { darkPink, lightFaded } = theme.COLORS;
+  const { darkPink, faded, lightFaded } = theme.COLORS;
 
   const textColor = {
     color: value === title ? "#FFFFFF" : "#000000",

@@ -150,7 +150,7 @@ export default function App() {
           options={{
             drawerIcon: ({ focused, color, size }) => (
               <Ionicons
-                name={focused ? "ios-home" : "ios-home-outline"}
+                name={focused ? "home" : "home-outline"}
                 size={size}
                 color={color}
               />
@@ -178,7 +178,7 @@ export default function App() {
           options={{
             drawerIcon: ({ focused, color, size }) => (
               <Ionicons
-                name={focused ? "ios-settings" : "ios-settings-outline"}
+                name={focused ? "settings" : "settings-outline"}
                 size={size}
                 color={color}
               />
@@ -221,7 +221,7 @@ export default function App() {
         <StatusBar backgroundColor={darkPink} barStyle={barStyle} />
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Payment"
+            initialRouteName="Other"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="Welcome" component={Welcome} />
