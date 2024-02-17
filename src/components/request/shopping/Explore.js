@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -10,103 +11,136 @@ import {
 import React, { useState } from "react";
 import theme from "../../../../assets/constants/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FlashList } from "@shopify/flash-list";
+import productData from "../../../helper/productData";
 
-const { darkPink, faded, lightFaded } = theme.COLORS;
+const { darkPink } = theme.COLORS;
 
-const DATA = [
-  {
-    id: 1,
-    title: "Snacks",
-  },
-  {
-    id: 2,
-    title: "Drinks",
-  },
-  {
-    id: 3,
-    title: "Groceries",
-  },
-  {
-    id: 4,
-    title: "Supplies",
-  },
-];
-
-const ProductCell = ({ id, name, price, vendor, section }) => {
-  fadedPink = "rgba(179, 7, 132, 0.1)";
-
-  return (
-    <Pressable style={[styles.product, { borderColor: fadedPink }]}>
-      <Image
-        source={require("../../../../assets/images/snack3.jpg")}
-        style={styles.productImg}
-      />
-      <View style={[styles.productDown, { backgroundColor: fadedPink }]}>
-        <Text style={styles.productName} numberOfLines={1}>
-          Digestive Biscuit
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 5,
-          }}
-        >
-          <Image
-            source={require("../../../../assets/icons/naira_icon.png")}
-            style={styles.priceIcon}
-          />
-          <Text style={styles.productPrice}>350</Text>
-        </View>
-        <Text style={styles.productVendor}>Stellaz Stores</Text>
-
-        <Pressable style={[styles.cartBtn, { backgroundColor: darkPink }]}>
-          <MaterialCommunityIcons name="cart" size={20} color="white" />
-          <Text style={styles.cartText}>Add to cart</Text>
-        </Pressable>
-      </View>
-      {/* <Pressable style={[styles.cartBtn, { backgroundColor: darkPink }]}>
-        <MaterialCommunityIcons name="cart" size={20} color="white" />
-      </Pressable> */}
-    </Pressable>
-  );
-};
+const TABS = ["Snacks", "Drinks", "Groceries", "Stationeries"];
 
 const Explore = () => {
+  fadedPink = "rgba(179, 7, 132, 0.1)";
+
   const [section, setSection] = useState("Snacks");
   const [searchText, updateSearchText] = useState("");
+  const [selected, addSelected] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalProductId, setModalProductId] = useState();
+  const [isAdd, setAdd] = useState(false);
 
-  const Item = ({ title }) => (
-    <Pressable
-      style={[
-        styles.section,
-        section === title && { borderBottomColor: darkPink, opacity: 1 },
-      ]}
-      onPress={() => setSection(title)}
-    >
-      <Text
-        style={[
-          styles.sectionText,
-          section === title && {
-            color: darkPink,
-            textDecorationLine: "underline",
-          },
-        ]}
-      >
-        {title}
-      </Text>
-    </Pressable>
-  );
+  const handleAddCart = (index) => {
+    addSelected((prevSelected) => [...prevSelected, index]);
+    console.log(selected);
+  };
+
+  const handleConfirmProduct = (id) => {
+    const matchingItem = selected.find((item, index) => item === index);
+
+    productData.find((obj, index) => obj.id === id && setModalProductId(index));
+
+    matchingItem ? setAdd(false) : setAdd(true);
+    setModalVisible(true);
+  };
+
+  // Function to render product components in pairs
+  const renderProductDataInPairs = () => {
+    const pairs = [];
+    for (let i = 0; i < productData.length; i += 2) {
+      pairs.push([productData[i], productData[i + 1]]);
+    }
+    return pairs;
+  };
+
+  // product component
+  const productCell = ({ item }) => {
+    return (
+      <View style={styles.productWidget}>
+        <Pressable style={[styles.product, { borderColor: fadedPink }]}>
+          <Image
+            source={require("../../../../assets/images/snack3.jpg")}
+            style={styles.productImg}
+          />
+          <View style={[styles.productDown, { backgroundColor: fadedPink }]}>
+            <Text style={styles.productName} numberOfLines={1}>
+              {item[0].name}
+            </Text>
+            <Text style={styles.productPrice} numberOfLines={1}>
+              &#8358;{item[0].price}
+            </Text>
+
+            <Pressable
+              style={[
+                styles.cartBtn,
+                selected.includes(item[0].id) && {
+                  backgroundColor: darkPink,
+                },
+              ]}
+              onPress={() => handleConfirmProduct(item[0].id)}
+            >
+              <MaterialCommunityIcons name="cart" size={20} color="white" />
+              <Text style={styles.cartText}>Add to cart</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+
+        {item[1] && (
+          <Pressable style={[styles.product, { borderColor: fadedPink }]}>
+            <Image
+              source={require("../../../../assets/images/snack3.jpg")}
+              style={styles.productImg}
+            />
+            <View style={[styles.productDown, { backgroundColor: fadedPink }]}>
+              <Text style={styles.productName} numberOfLines={1}>
+                {item[1].name}
+              </Text>
+              <Text style={styles.productPrice} numberOfLines={1}>
+                &#8358;{item[1].price}
+              </Text>
+
+              <Pressable
+                style={[
+                  styles.cartBtn,
+                  selected.includes(item[1].id) && {
+                    backgroundColor: darkPink,
+                  },
+                ]}
+                onPress={() => handleConfirmProduct(item[1].id)}
+              >
+                <MaterialCommunityIcons name="cart" size={20} color="white" />
+                <Text style={styles.cartText}>Add to cart</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        )}
+      </View>
+    );
+  };
 
   return (
     <View style={{ flex: 1 }}>
-      <View>
-        <FlatList
-          data={DATA}
-          renderItem={({ item }) => <Item title={item.title} />}
-          keyExtractor={(item) => item.id}
-          horizontal
-        />
+      <View style={styles.sectionNav}>
+        {TABS.map((item, index) => (
+          <Pressable
+            key={index}
+            style={[
+              styles.section,
+              section === item && { borderBottomColor: darkPink, opacity: 1 },
+            ]}
+            onPress={() => setSection(item)}
+          >
+            <Text
+              style={[
+                styles.sectionText,
+                section === item && {
+                  color: darkPink,
+                  textDecorationLine: "underline",
+                },
+              ]}
+            >
+              {item}
+            </Text>
+          </Pressable>
+        ))}
       </View>
 
       <View style={[styles.search, { borderColor: darkPink }]}>
@@ -128,16 +162,42 @@ const Explore = () => {
 
       <View
         style={{
+          flex: 1,
           flexDirection: "row",
           justifyContent: "space-between",
-          paddingTop: 45,
-          overflow: "hidden",
-          //   paddingHorizontal: 15,
+          paddingTop: 30,
         }}
       >
-        <ProductCell />
-        <ProductCell />
+        <FlashList
+          data={renderProductDataInPairs()}
+          renderItem={productCell}
+          keyExtractor={(_, index) => index.toString()}
+          estimatedItemSize={5}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
+
+      <View style={[styles.counter, { backgroundColor: darkPink }]}>
+        <Text style={styles.counterText}>{selected.length}</Text>
+      </View>
+
+      <Modal
+        animationType="spring"
+        transparent
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      >
+        <Pressable
+          style={styles.modalBackdrop}
+          onPress={() => setModalVisible(false)}
+        >
+          <Pressable style={styles.modalContainer}>
+            <Text style={styles.modalProductName}>
+              {productData[modalProductId[0]].name}
+            </Text>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   );
 };
@@ -145,9 +205,12 @@ const Explore = () => {
 export default Explore;
 
 const styles = StyleSheet.create({
-  section: {
-    marginTop: 10,
+  sectionNav: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
   },
+  section: {},
   sectionText: {
     fontFamily: "LatoRegular",
     fontSize: 16,
@@ -181,13 +244,19 @@ const styles = StyleSheet.create({
     height: 30,
     tintColor: "white",
   },
+  productWidget: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   product: {
     width: "45%",
-    height: 220,
+    height: 210,
     borderWidth: 2,
     borderRadius: 20,
     paddingTop: 5,
     overflow: "hidden",
+    marginBottom: 20,
   },
   productImg: {
     width: "100%",
@@ -201,7 +270,7 @@ const styles = StyleSheet.create({
   productName: {
     fontFamily: "LatoBold",
     maxWidth: "100%",
-    marginBottom: 5,
+    marginBottom: 10,
     fontSize: 14,
   },
   priceIcon: {
@@ -211,6 +280,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontFamily: "LatoRegular",
     fontSize: 14,
+    marginBottom: 5,
   },
   productVendor: {
     fontFamily: "Prociono",
@@ -221,14 +291,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 20,
     padding: 4,
-    marginTop: 10,
+    marginTop: 15,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, .4)",
   },
   cartText: {
     color: "white",
     fontFamily: "Prociono",
     fontSize: 12,
     marginStart: 5,
+  },
+  counter: {
+    position: "absolute",
+    bottom: 5,
+    right: 0,
+    height: 45,
+    width: 45,
+    borderRadius: 30,
+    justifyContent: "center",
+    opacity: 0.7,
+    zIndex: 0,
+  },
+  counterText: {
+    fontFamily: "LatoBold",
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
   },
 });

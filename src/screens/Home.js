@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/home/Header";
 import BottomNav from "../components/home/BottomNav";
 import theme from "../../assets/constants/theme";
@@ -9,14 +9,17 @@ import Chat from "../components/home/Chat";
 import Account from "../components/home/Account";
 import { saveAsyncToken } from "../helper/AsyncStorage";
 import { useNavigation } from "@react-navigation/native";
+import errandData from "../helper/errandData";
+import BottomOrderSheet from "../components/home/BottomOrderSheet";
 
 const Home = () => {
   const navigation = useNavigation();
 
+  const sheetRef = useRef(null);
   const { darkPink } = theme.COLORS;
-  const { medium } = theme.SHADOWS;
 
   const [tab, setTab] = useState("Home");
+  const [errand, updateErrand] = useState({});
 
   const handleTab = (page) => {
     setTab(page);
@@ -28,13 +31,23 @@ const Home = () => {
     navigation.navigate("Request");
   };
 
+  const handleOrderBtn = async (index) => {
+    updateErrand(errandData[index]);
+    await sheetRef.current.open();
+  };
+
   const renderTabs = () => {
     switch (tab) {
       case "Home":
-        return <Landing />;
+        return (
+          <Landing
+            setTab={() => handleTab("History")}
+            handleOrderBtn={handleOrderBtn}
+          />
+        );
 
       case "History":
-        return <History />;
+        return <History handleOrderBtn={handleOrderBtn} />;
 
       case "Chat":
         return <Chat />;
@@ -65,14 +78,11 @@ const Home = () => {
         )}
       </View>
 
-      <ScrollView
-        style={{ flex: 1, marginBottom: 60 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {renderTabs()}
-      </ScrollView>
+      <View style={{ flex: 1, marginBottom: 60 }}>{renderTabs()}</View>
 
       <BottomNav tab={tab} handleTab={handleTab} />
+
+      <BottomOrderSheet sheetRef={sheetRef} errand={errand} />
     </View>
   );
 };
@@ -90,6 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 15,
+    marginBottom: 5,
   },
   headTitleText: {
     fontFamily: "LatoBold",

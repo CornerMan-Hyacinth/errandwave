@@ -19,10 +19,9 @@ const MainShopping = ({ handleCat }) => {
   const { darkPink } = theme.COLORS;
   const [step, setStep] = useState(1);
   const [requestEntry, updateRequestEntry] = useState({
-    category: "",
+    items: [],
     meetup: "",
     delivery: "",
-    priceRange: "",
   });
 
   const handleRequestEntry = (field, value) => {
@@ -132,10 +131,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginVertical: 15,
   },
   btn: {
-    position: "absolute",
-    bottom: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

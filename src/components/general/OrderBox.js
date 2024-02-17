@@ -1,120 +1,56 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import {
-  AntDesign,
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../assets/constants/theme";
 
-const OrderBox = ({ status }) => {
+const OrderBox = ({ status, category, rider, handleOrderBtn }) => {
   const { darkPink } = theme.COLORS;
 
   const MidBox = () => {
-    switch (status) {
-      case "ongoing":
-        return (
-          <View style={[styles.midView, { marginStart: 15, opacity: 0.8 }]}>
-            <Image
-              source={require("../../../assets/icons/status_Icon.png")}
-              style={styles.statusIcon}
-            />
-            <Text style={styles.statusText}>En Route</Text>
-            <View style={[styles.iconView, { backgroundColor: "#F31709" }]}>
-              <MaterialCommunityIcons
-                name="progress-clock"
-                size={20}
-                color="white"
-              />
-            </View>
+    return (
+      <View style={styles.midBox}>
+        <View style={[styles.midView, { marginBottom: 10 }]}>
+          <View style={styles.riderBox}>
+            <Text style={styles.riderText}>Rider</Text>
           </View>
-        );
-
-      case "pending":
-        return (
-          <View style={[styles.midView, { marginStart: 15, opacity: 0.8 }]}>
-            <Image
-              source={require("../../../assets/icons/status_Icon.png")}
-              style={styles.statusIcon}
-            />
-            <Text style={styles.statusText}>Pending</Text>
-            <View style={[styles.iconView, { backgroundColor: "#F3A309" }]}>
-              <MaterialIcons name="pending" size={20} color="white" />
-            </View>
-          </View>
-        );
-
-      case "canceled":
-        return (
-          <View style={[styles.midView, { marginStart: 15, opacity: 0.8 }]}>
-            <Image
-              source={require("../../../assets/icons/status_Icon.png")}
-              style={styles.statusIcon}
-            />
-            <Text style={styles.statusText}>Canceled</Text>
-            <View style={[styles.iconView, { backgroundColor: "#F31709" }]}>
-              <MaterialIcons name="cancel" size={20} color="white" />
-            </View>
-          </View>
-        );
-
-      case "delivered":
-        return (
-          <View style={styles.midBox}>
-            <View style={[styles.midView, { marginBottom: 12 }]}>
-              <View style={styles.riderBox}>
-                <Text style={styles.riderText}>Rider</Text>
-              </View>
-              <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
-                Victor Akachukwu Obinna
-              </Text>
-            </View>
-            <View style={[styles.midView, { marginBottom: 12 }]}>
-              <View style={[styles.midView, { marginEnd: 15 }]}>
-                <Ionicons name="star-sharp" size={15} color="white" />
-                <Text style={styles.flexText}>3.7</Text>
-              </View>
-              <View style={styles.midView}>
-                <MaterialIcons name="payments" size={15} color="white" />
-                <Text style={styles.flexText}>&#x20A6; 1300</Text>
-              </View>
-            </View>
-            <View style={styles.midView}>
-              <Image
-                source={require("../../../assets/icons/status_Icon.png")}
-                style={styles.statusIcon}
-              />
-              <Text style={styles.delivered}>Received</Text>
-              <View
-                style={[
-                  styles.iconView,
-                  { backgroundColor: "#157E02", padding: 2 },
-                ]}
-              >
-                <AntDesign name="check" size={15} color="white" />
-              </View>
-            </View>
-          </View>
-        );
-
-      default:
-        break;
-    }
+          <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+            {rider}
+          </Text>
+        </View>
+        <View style={[styles.midView, { marginBottom: 10 }]}>
+          <MaterialIcons name="payments" size={15} color="white" />
+          <Text style={styles.flexText}>&#x20A6;1300</Text>
+        </View>
+        <View style={styles.midView}>
+          <Image
+            source={require("../../../assets/icons/status_Icon.png")}
+            style={styles.statusIcon}
+          />
+          <Text
+            style={[
+              styles.delivered,
+              status === "Received" && { color: "#4AEF3C" },
+            ]}
+          >
+            {status}
+          </Text>
+        </View>
+      </View>
+    );
   };
 
   return (
     <Pressable style={[styles.container, { backgroundColor: darkPink }]}>
       <View style={styles.leftBox}>
         <Text style={styles.date}>13 Dec 2023</Text>
-        <Text style={styles.time}>13:23</Text>
+        <Text style={styles.time}>{category}</Text>
       </View>
       <View>
         <MidBox />
       </View>
-      <View style={styles.nextBtn}>
+      <Pressable style={styles.nextBtn} onPress={handleOrderBtn}>
         <AntDesign name="arrowright" size={20} color="black" />
-      </View>
+      </Pressable>
     </Pressable>
   );
 };
@@ -134,7 +70,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: "100%",
     backgroundColor: "rgba(255, 255, 255, .65)",
-    alignItems: "center",
+    paddingStart: 10,
     justifyContent: "center",
     borderTopEndRadius: 50,
     borderTopStartRadius: 20,
@@ -142,14 +78,15 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 20,
   },
   date: {
-    fontFamily: "LatoBold",
+    fontFamily: "LatoRegular",
     fontSize: 12,
     marginBottom: 10,
+    opacity: 0.6,
   },
   time: {
-    fontFamily: "LatoRegular",
-    fontSize: 16,
-    opacity: 0.7,
+    fontFamily: "LatoBold",
+    fontSize: 14,
+    opacity: 0.6,
   },
   midBox: {
     paddingVertical: 15,
@@ -190,7 +127,7 @@ const styles = StyleSheet.create({
   delivered: {
     fontFamily: "LatoBold",
     fontSize: 12,
-    marginHorizontal: 7,
+    marginHorizontal: 3,
     color: "white",
   },
   statusText: {

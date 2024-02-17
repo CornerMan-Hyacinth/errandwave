@@ -12,7 +12,6 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
 import Delivery from "../general/Delivery";
 import Confirm from "../general/Confirm";
-import Laundromat from "./Laundromat";
 import Services from "./Services";
 import Meetup from "./Meetup";
 
@@ -21,7 +20,6 @@ const MainLaundry = ({ handleCat }) => {
   const { darkPink } = theme.COLORS;
   const [step, setStep] = useState(1);
   const [requestEntry, updateRequestEntry] = useState({
-    laundromat: "",
     meetupLocation: "",
     services: [],
     deliveryLocation: "",
@@ -44,22 +42,19 @@ const MainLaundry = ({ handleCat }) => {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <Laundromat />;
-
-      case 2:
         return <Services />;
 
-      case 3:
+      case 2:
         return <Meetup />;
 
-      case 4:
+      case 3:
         return (
           <Delivery
             locationValue={requestEntry.delivery}
             updateLocation={handleRequestEntry}
           />
         );
-      case 5:
+      case 4:
         return <Confirm />;
       default:
         break;

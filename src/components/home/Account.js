@@ -1,19 +1,47 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  Image,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useState } from "react";
 import {
   AntDesign,
   Entypo,
   FontAwesome,
   FontAwesome5,
+  Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import theme from "../../../assets/constants/theme";
+import { saveAsyncToken } from "../../helper/AsyncStorage";
+import { useNavigation } from "@react-navigation/native";
 
 const Account = () => {
+  const navigation = useNavigation();
   const { darkPink } = theme.COLORS;
+  const { medium } = theme.SHADOWS;
+
+  const [modal, setModal] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOtherBtn = async (page) => {
+    await saveAsyncToken("other", page);
+    navigation.navigate("Other");
+  };
+
+  const handleModalBtn = (feat) => {
+    setModal(feat);
+    setModalVisible(true);
+  };
+
+  const handleOut = () => {};
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <View style={styles.top}>
         <Image
           source={require("../../../assets/images/avatarImage.jpg")}
@@ -31,34 +59,46 @@ const Account = () => {
 
       <Text style={styles.title}>PERSONAL</Text>
 
-      <View style={styles.btnWidget}>
+      <Pressable
+        style={styles.btnWidget}
+        onPress={() => handleOtherBtn("wallet")}
+      >
         <View style={{ flexDirection: "row" }}>
           <FontAwesome5 name="wallet" size={20} color={darkPink} />
           <Text style={styles.btnTitle}>Waver Wallet</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thinLine} />
 
-      <View style={styles.btnWidget}>
+      <Pressable
+        style={styles.btnWidget}
+        onPress={() => handleOtherBtn("referral")}
+      >
         <View style={{ flexDirection: "row" }}>
           <Entypo name="users" size={20} color={darkPink} />
           <Text style={styles.btnTitle}>Invite Friends</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thinLine} />
 
-      <View style={styles.btnWidget}>
+      <Pressable
+        style={styles.btnWidget}
+        onPress={() => handleOtherBtn("help")}
+      >
         <View style={{ flexDirection: "row" }}>
           <Entypo name="help-with-circle" size={20} color={darkPink} />
           <Text style={styles.btnTitle}>Help & Support</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thinLine} />
 
-      <View style={styles.btnWidget}>
+      <Pressable
+        style={styles.btnWidget}
+        onPress={() => handleModalBtn("delete")}
+      >
         <View style={{ flexDirection: "row" }}>
           <MaterialIcons name="delete" size={20} color="#FF0000" />
           <Text style={[styles.btnTitle, { color: "#FF0000" }]}>
@@ -66,57 +106,105 @@ const Account = () => {
           </Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thickLine} />
 
       <Text style={styles.title}>GENERAL</Text>
 
-      <View style={styles.btnWidget}>
+      <Pressable style={styles.btnWidget}>
         <View style={{ flexDirection: "row" }}>
           <Entypo name="star" size={20} color={darkPink} />
           <Text style={styles.btnTitle}>Rate App</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thinLine} />
 
-      <View style={styles.btnWidget}>
+      <Pressable style={styles.btnWidget}>
         <View style={{ flexDirection: "row" }}>
           <FontAwesome name="group" size={20} color={darkPink} />
           <Text style={styles.btnTitle}>Join Our Community</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thinLine} />
 
-      <View style={styles.btnWidget}>
+      <Pressable
+        style={styles.btnWidget}
+        onPress={() => handleOtherBtn("privacy")}
+      >
         <View style={{ flexDirection: "row" }}>
           <MaterialIcons name="privacy-tip" size={20} color={darkPink} />
           <Text style={styles.btnTitle}>Privacy Policy</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thinLine} />
 
-      <View style={styles.btnWidget}>
+      <Pressable
+        style={styles.btnWidget}
+        onPress={() => handleOtherBtn("terms")}
+      >
         <View style={{ flexDirection: "row" }}>
           <AntDesign name="filetext1" size={20} color={darkPink} />
           <Text style={styles.btnTitle}>Terms of Service</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
+      </Pressable>
       <View style={styles.thickLine} />
 
-      <View style={[styles.btnWidget, { marginTop: 30, marginBottom: 30 }]}>
+      <Pressable
+        style={[styles.btnWidget, { marginTop: 30, marginBottom: 30 }]}
+        onPress={() => handleModalBtn("logout")}
+      >
         <View style={{ flexDirection: "row" }}>
-          <MaterialIcons name="delete" size={20} color="#FF0000" />
-          <Text style={[styles.btnTitle, { color: "#FF0000" }]}>
-            Delete Account
-          </Text>
+          <Ionicons name="log-out" size={20} color="#FF0000" />
+          <Text style={[styles.btnTitle, { color: "#FF0000" }]}>Log out</Text>
         </View>
         <MaterialIcons name="navigate-next" size={20} color="black" />
-      </View>
-    </View>
+      </Pressable>
+
+      <Modal
+        animationType="spring"
+        transparent
+        statusBarTranslucent
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      >
+        <Pressable
+          style={styles.modalBackdrop}
+          onPress={() => setModalVisible(false)}
+        >
+          <Pressable style={[styles.modalContainer, medium]}>
+            <Text style={styles.modalTitle}>
+              {modal === "delete"
+                ? "Do you wish to delete your account?"
+                : "Do you wish to logout?"}
+            </Text>
+            {modal === "delete" && (
+              <Text style={styles.modalNote}>
+                *Clicking 'Yes' will remove all records of your account
+              </Text>
+            )}
+
+            <View style={styles.modalBtnWidget}>
+              <Pressable
+                style={styles.modalBtn}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.modalBtnText}>No</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.modalBtn, { backgroundColor: darkPink }]}
+                onPress={handleOut}
+              >
+                <Text style={styles.modalBtnText}>Yes</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </ScrollView>
   );
 };
 
@@ -124,7 +212,7 @@ export default Account;
 
 const styles = StyleSheet.create({
   top: {
-    marginTop: 30,
+    marginTop: 15,
     paddingHorizontal: 15,
     flexDirection: "row",
     alignItems: "center",
@@ -189,5 +277,45 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     opacity: 0.5,
     marginTop: 10,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, .3)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    width: "80%",
+    padding: 15,
+    borderRadius: 10,
+  },
+  modalTitle: {
+    fontFamily: "LatoRegular",
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  modalNote: {
+    fontFamily: "LatoRegular",
+    fontSize: 14,
+    opacity: 0.5,
+  },
+  modalBtnWidget: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 30,
+  },
+  modalBtn: {
+    width: 100,
+    paddingVertical: 10,
+    borderRadius: 10,
+    backgroundColor: "rgba(0, 0, 0, .6)",
+  },
+  modalBtnText: {
+    textAlign: "center",
+    fontFamily: "Prociono",
+    fontSize: 16,
+    color: "white",
   },
 });

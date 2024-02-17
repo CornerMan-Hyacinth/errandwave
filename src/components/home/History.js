@@ -3,15 +3,71 @@ import React from "react";
 import theme from "../../../assets/constants/theme";
 import { useState } from "react";
 import OrderBox from "../general/OrderBox";
+import errandData from "../../helper/errandData";
 
-const History = () => {
+const History = ({ handleOrderBtn }) => {
   const { darkPink, faded, lightFaded } = theme.COLORS;
 
   const [sort, setSort] = useState("all");
 
+  const renderAll = errandData.map((item, index) => (
+    <OrderBox
+      key={item.id}
+      status={item.status}
+      category={item.category}
+      index={item.id}
+      rider={item.rider}
+      handleOrderBtn={() => handleOrderBtn(index)}
+    />
+  ));
+
+  const renderOngoing = errandData.map(
+    (item, index) =>
+      item.status === "Ongoing" && (
+        <OrderBox
+          key={item.id}
+          status={item.status}
+          category={item.category}
+          index={item.id}
+          rider={item.rider}
+          handleOrderBtn={() => handleOrderBtn(index)}
+        />
+      )
+  );
+
+  const renderReceived = errandData.map(
+    (item, index) =>
+      item.status === "Received" && (
+        <OrderBox
+          key={item.id}
+          status={item.status}
+          category={item.category}
+          index={item.id}
+          rider={item.rider}
+          handleOrderBtn={() => handleOrderBtn(index)}
+        />
+      )
+  );
+
+  const renderOrders = () => {
+    switch (sort) {
+      case "all":
+        return renderAll;
+
+      case "ongoing":
+        return renderOngoing;
+
+      case "received":
+        return renderReceived;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <View style={styles.topNav}>
         <Pressable
           style={[
             styles.sortBox,
@@ -27,20 +83,6 @@ const History = () => {
         <Pressable
           style={[
             styles.sortBox,
-            { backgroundColor: sort === "pending" ? darkPink : lightFaded },
-          ]}
-          onPress={() => sort !== "pending" && setSort("pending")}
-        >
-          <Text
-            style={[styles.sortText, sort !== "pending" && { color: "black" }]}
-          >
-            Pending
-          </Text>
-        </Pressable>
-
-        <Pressable
-          style={[
-            styles.sortBox,
             { backgroundColor: sort === "ongoing" ? darkPink : lightFaded },
           ]}
           onPress={() => sort !== "ongoing" && setSort("ongoing")}
@@ -48,7 +90,7 @@ const History = () => {
           <Text
             style={[styles.sortText, sort !== "ongoing" && { color: "black" }]}
           >
-            En route
+            Ongoing
           </Text>
         </Pressable>
 
@@ -65,28 +107,14 @@ const History = () => {
             Received
           </Text>
         </Pressable>
-
-        <Pressable
-          style={[
-            styles.sortBox,
-            { backgroundColor: sort === "canceled" ? darkPink : lightFaded },
-          ]}
-          onPress={() => sort !== "canceled" && setSort("canceled")}
-        >
-          <Text
-            style={[styles.sortText, sort !== "canceled" && { color: "black" }]}
-          >
-            Canceled
-          </Text>
-        </Pressable>
-      </ScrollView>
-
-      <View style={styles.orderBoxWidget}>
-        <OrderBox status={"pending"} />
-        <OrderBox status={"ongoing"} />
-        <OrderBox status={"delivered"} />
-        <OrderBox status={"canceled"} />
       </View>
+
+      <ScrollView
+        style={styles.orderBoxWidget}
+        showsVerticalScrollIndicator={false}
+      >
+        {renderOrders()}
+      </ScrollView>
     </View>
   );
 };
@@ -97,7 +125,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 15,
-    marginTop: 30,
+    marginTop: 15,
+  },
+  topNav: {
+    flexDirection: "row",
+    position: "absolute",
+    alignItems: "center",
+    top: 0,
+    left: 15,
+    zIndex: 1,
   },
   sortBox: {
     paddingHorizontal: 15,
@@ -111,8 +147,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   orderBoxWidget: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 45,
+    // justifyContent: "center",
+    // alignItems: "center",
+    marginTop: 50,
+    paddingTop: 5,
   },
 });

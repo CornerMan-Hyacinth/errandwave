@@ -2,7 +2,9 @@
   "dependencies": {
     "@babel/register": "^7.22.15",
     "@devvie/bottom-sheet": "^0.2.1",
+    "@expo/metro-runtime": "~3.1.1",
     "@react-native-async-storage/async-storage": "1.21.0",
+    "@react-native-clipboard/clipboard": "^1.13.2",
     "@react-native-community/checkbox": "^0.5.16",
     "@react-native-picker/picker": "2.6.1",
     "@react-navigation/drawer": "^6.6.6",
@@ -30,7 +32,9 @@
     "react-native-root-siblings": "^5.0.1",
     "react-native-root-toast": "^3.5.1",
     "react-native-web": "~0.19.6",
-    "@expo/metro-runtime": "~3.1.1"
+    "expo-clipboard": "~5.0.1",
+    "@shopify/flash-list": "1.6.3",
+    "expo-dev-client": "~3.3.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

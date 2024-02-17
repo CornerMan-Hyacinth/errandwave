@@ -11,25 +11,20 @@ import {
 } from "./src/preferences/Theme";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Ionicons } from "@expo/vector-icons";
 import { getAsyncToken, saveAsyncToken } from "./src/helper/AsyncStorage";
 import Welcome from "./src/screens/Welcome";
 import Auth from "./src/screens/Auth";
 import Forgot from "./src/screens/Forgot";
 import Home from "./src/screens/Home";
 import Other from "./src/screens/Other";
-import About from "./src/components/other/About";
-import Settings from "./src/components/other/Settings";
-import Terms from "./src/components/other/Terms";
-import SignOut from "./src/components/other/SignOut";
-import { LinearGradient } from "expo-linear-gradient";
 import ChatRoom from "./src/screens/ChatRoom";
 import Request from "./src/screens/Request";
 import Payment from "./src/screens/Payment";
+import HomeWaver from "./src/screens/HomeWaver";
+import RequestWaver from "./src/screens/RequestWaver";
+import Contact from "./src/screens/Contact";
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
 
 const screenOptions = {
   gestureEnabled: true,
@@ -59,22 +54,11 @@ const screenOptions = {
 };
 
 export default function App() {
-  const [appTheme, setAppTheme] = useState("light");
-
-  const { gradient, darkPink, faded, lightFaded } = theme.COLORS;
+  const { darkPink } = theme.COLORS;
 
   useEffect(() => {
     const prepare = async () => {
       await SplashScreen.preventAutoHideAsync();
-    };
-    const getTheme = async () => {
-      getThemePreference().then((storedTheme) => {
-        if (storedTheme != null) {
-          setAppTheme(storedTheme);
-        } else {
-          setThemePreference("light");
-        }
-      });
     };
     const prepareSettings = async () => {
       await getAsyncToken("notification").then((response) => {
@@ -87,7 +71,6 @@ export default function App() {
     };
 
     prepare();
-    getTheme();
     prepareSettings();
   }, []);
 
@@ -117,111 +100,13 @@ export default function App() {
 
   const barStyle = "light-content";
 
-  const DrawerContent = (props) => {
-    return (
-      <LinearGradient colors={gradient} style={{ flex: 1 }}>
-        {/* Your drawer content here */}
-        {props.children}
-        <Text>Hello</Text>
-      </LinearGradient>
-    );
-  };
-
-  const HomeDrawer = () => {
-    return (
-      <Drawer.Navigator
-        initialRouteName="Home"
-        // drawerContent={(props) => <DrawerContent {...props} />}
-        screenOptions={{
-          // backgroundColor: "transparent",
-          headerShown: false,
-          drawerActiveTintColor: darkPink,
-          drawerInactiveTintColor: "black",
-          drawerActiveBackgroundColor: lightFaded,
-          drawerLabelStyle: {
-            fontSize: 16,
-            fontFamily: "Prociono",
-          },
-        }}
-      >
-        <Drawer.Screen
-          name="Home"
-          component={Home}
-          options={{
-            drawerIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? "home" : "home-outline"}
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="About"
-          component={About}
-          options={{
-            drawerIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={
-                  focused ? "information-circle" : "information-circle-outline"
-                }
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            drawerIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? "settings" : "settings-outline"}
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="Terms"
-          component={Terms}
-          options={{
-            drawerIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? "book" : "book-outline"}
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="Logout"
-          component={SignOut}
-          options={{
-            drawerIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? "log-out" : "log-out-outline"}
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-      </Drawer.Navigator>
-    );
-  };
-
   return (
     <RootSiblingParent>
       <View style={styles.container} onLayout={onLayoutRootView}>
         <StatusBar backgroundColor={darkPink} barStyle={barStyle} />
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Other"
+            initialRouteName="Home"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="Welcome" component={Welcome} />
@@ -235,14 +120,21 @@ export default function App() {
               component={Forgot}
               options={screenOptions}
             />
-            <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="HomeWaver" component={HomeWaver} />
             <Stack.Screen name="Chat" component={ChatRoom} />
             <Stack.Screen name="Request" component={Request} />
+            <Stack.Screen
+              name="RequestWaver"
+              component={RequestWaver}
+              options={screenOptions}
+            />
             <Stack.Screen
               name="Payment"
               component={Payment}
               options={screenOptions}
             />
+            <Stack.Screen name="Contact" component={Contact} />
             <Stack.Screen
               name="Other"
               component={Other}
@@ -258,5 +150,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
   },
 });

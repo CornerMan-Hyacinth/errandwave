@@ -1,43 +1,24 @@
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import theme from "../../../assets/constants/theme";
-import { useNavigation } from "@react-navigation/native";
-import { saveAsyncToken } from "../../helper/AsyncStorage";
 
 const Chat = () => {
   return (
-    <ScrollView
-      style={{ flex: 1, paddingHorizontal: 15, marginTop: 15 }}
-      showsVerticalScrollIndicator={false}
-    >
-      <ChatBox />
-      <ChatBox />
-      <ChatBox />
-    </ScrollView>
+    <View style={{ flex: 1, paddingHorizontal: 15 }}>
+      <View style={{ marginTop: 30 }}>
+        <ChatBox />
+        <ChatBox />
+        <ChatBox />
+      </View>
+    </View>
   );
 };
 
 const ChatBox = () => {
-  const navigation = useNavigation();
-  const { darkPink, lightFaded } = theme.COLORS;
-
-  const handleChat = async () => {
-    await saveAsyncToken("contact", "dm");
-    navigation.navigate("Contact");
-  };
+  const { darkPink, faded, lightFaded } = theme.COLORS;
 
   return (
-    <Pressable
-      style={[styles.chatBox, { backgroundColor: lightFaded }]}
-      onPress={handleChat}
-    >
+    <Pressable style={[styles.chatBox, { backgroundColor: lightFaded }]}>
       <View>
         <Image
           source={require("../../../assets/icons/propic.jpg")}
@@ -76,7 +57,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 7,
     paddingVertical: 10,
     borderRadius: 10,
-    marginBottom: 15,
+    marginBottom: 20,
   },
   roundPic: {
     width: 40,

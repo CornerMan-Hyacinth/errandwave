@@ -1,48 +1,79 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useState } from "react";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import theme from "../../../assets/constants/theme";
 import OrderBox from "../general/OrderBox";
 import AnimatedLottieView from "lottie-react-native";
 import { saveAsyncToken } from "../../helper/AsyncStorage";
 import { useNavigation } from "@react-navigation/native";
+import errandData from "../../helper/errandData";
 
-const Landing = () => {
+const Landing = ({ setTab, handleOrderBtn }) => {
   const navigation = useNavigation();
 
   const { medium } = theme.SHADOWS;
   const { darkPink, faded } = theme.COLORS;
+  const threeErrands = errandData.slice(0, 3);
+
+  const [balanceShown, setBalanceShown] = useState(false);
 
   const handleRequest = async (category) => {
     await saveAsyncToken("request", category);
     navigation.navigate("Request");
   };
 
+  const goToWallet = async () => {
+    await saveAsyncToken("other", "wallet");
+    navigation.navigate("Other");
+  };
+
+  const handleReferBtn = async () => {
+    await saveAsyncToken("other", "referral");
+    navigation.navigate("Other");
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.cardWidget}>
-        <View style={[styles.cardLeftBox, medium]}>
+        <Pressable style={[styles.cardLeftBox, medium]} onPress={goToWallet}>
           <View style={styles.leftHead}>
             <Text style={styles.leftHeadText}>Your Balance</Text>
-            <Pressable>
-              <FontAwesome5 name="eye-slash" size={15} color="black" />
+            <Pressable onPress={() => setBalanceShown(!balanceShown)}>
+              <FontAwesome5
+                name={balanceShown ? "eye" : "eye-slash"}
+                size={15}
+                color="black"
+              />
             </Pressable>
           </View>
-          <Text style={styles.protectedText}>&#8358; 7000</Text>
-        </View>
-        <View style={[styles.cardRightBox, { backgroundColor: darkPink }]}>
+          <Text style={styles.protectedText}>
+            {balanceShown ? <Text>&#8358; 7000</Text> : <Text>*****</Text>}
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.cardRightBox, { backgroundColor: darkPink }]}
+          onPress={setTab}
+        >
           <Text style={styles.rightNo}>0</Text>
-          <Text style={styles.rightText}>orders delivered</Text>
-        </View>
+          <Text style={styles.rightText}>orders{"\n"}requested</Text>
+        </Pressable>
       </View>
 
       <View style={[styles.referralCard, { backgroundColor: darkPink }]}>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: "center", width: "60%" }}>
           <Text style={styles.referH1}>Refer a friend</Text>
-          <Text style={styles.referH2}>& get 3 free deliveries</Text>
-          <Pressable style={styles.referBtn}>
+          <Text style={styles.referH2}>& earn up to 15000{"\n"}monthly</Text>
+          <Pressable style={styles.referBtn} onPress={handleReferBtn}>
             <Text style={[styles.referBtnText, { color: darkPink }]}>
-              Start Referring
+              Learn how
             </Text>
           </Pressable>
         </View>
@@ -94,19 +125,25 @@ const Landing = () => {
       </View>
 
       <View style={styles.prevFlex}>
-        <Text style={styles.prevText}>Previous Orders</Text>
+        <Text style={styles.prevText}>Requests</Text>
         <Pressable>
           <Text style={[styles.prevMore, { color: faded }]}>show all</Text>
         </Pressable>
       </View>
 
       <View style={styles.orderBoxWidget}>
-        <OrderBox status={"pending"} />
-        <OrderBox status={"ongoing"} />
-        <OrderBox status={"delivered"} />
-        <OrderBox status={"canceled"} />
+        {threeErrands.map((item, index) => (
+          <OrderBox
+            key={item.id}
+            status={item.status}
+            category={item.category}
+            index={item.id}
+            rider={item.rider}
+            handleOrderBtn={() => handleOrderBtn(index)}
+          />
+        ))}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -116,7 +153,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 15,
-    marginTop: 30,
+    marginTop: 15,
   },
   cardWidget: {
     flexDirection: "row",
@@ -162,11 +199,11 @@ const styles = StyleSheet.create({
     marginEnd: 15,
   },
   rightText: {
-    width: 65,
+    width: 70,
     fontFamily: "Prociono",
     fontSize: 16,
     color: "white",
-    lineHeight: 25,
+    lineHeight: 20,
   },
   referralCard: {
     width: "100%",
@@ -174,7 +211,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 25,
+    paddingHorizontal: 10,
     borderRadius: 5,
     overflow: "hidden",
   },
@@ -194,9 +231,11 @@ const styles = StyleSheet.create({
     fontFamily: "LatoBold",
     fontSize: 15,
     marginBottom: 20,
+    textAlign: "center",
   },
   referBtn: {
     height: 35,
+    width: "80%",
     backgroundColor: "white",
     justifyContent: "center",
     borderRadius: 10,
@@ -205,7 +244,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "Prociono",
     fontSize: 15,
-    paddingHorizontal: 10,
   },
   prevFlex: {
     flexDirection: "row",

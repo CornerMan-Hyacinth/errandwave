@@ -14,7 +14,6 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../../assets/constants/theme";
 import Delivery from "../general/Delivery";
 import Confirm from "../general/Confirm";
-import Eatery from "./Eatery";
 import Order from "./Order";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
@@ -27,7 +26,6 @@ const MainMeal = ({ handleCat }) => {
 
   const [step, setStep] = useState(1);
   const [requestEntry, updateRequestEntry] = useState({
-    eatery: "",
     meal: [],
     totalPrice: "",
     deliveryLocation: "",
@@ -81,28 +79,20 @@ const MainMeal = ({ handleCat }) => {
     switch (step) {
       case 1:
         return (
-          <Eatery
-            isToastVisible={isToastVisible}
-            updateEatery={handleRequestEntry}
-          />
-        );
-
-      case 2:
-        return (
           <Order
             isToastVisible={isToastVisible}
             updateAllOrders={handleAllOrders}
           />
         );
 
-      case 3:
+      case 2:
         return (
           <Delivery
             locationValue={requestEntry.delivery}
             updateLocation={handleRequestEntry}
           />
         );
-      case 4:
+      case 3:
         return <Confirm />;
       default:
         break;

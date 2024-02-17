@@ -1,11 +1,6 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
-import {
-  Entypo,
-  FontAwesome,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import theme from "../../../assets/constants/theme";
 
 const BottomNav = ({ tab, handleTab }) => {
@@ -14,34 +9,41 @@ const BottomNav = ({ tab, handleTab }) => {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   };
 
-  const Home = () => {
+  const Dashboard = () => {
     return (
-      <Pressable onPress={() => handleTab("Home")}>
+      <Pressable onPress={() => handleTab("Dashboard")}>
         <View
           style={[
             styles.iconWidget,
-            tab === "Home" && { backgroundColor: blackBg.backgroundColor },
+            tab === "Dashboard" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <Entypo name="home" size={tab === "Home" ? 20 : 25} color="white" />
+          <MaterialIcons
+            name="dashboard"
+            size={tab === "Dashboard" ? 20 : 25}
+            color="white"
+          />
         </View>
       </Pressable>
     );
   };
 
-  const History = () => {
+  const Errands = () => {
     return (
-      <Pressable onPress={() => handleTab("History")}>
+      <Pressable onPress={() => handleTab("Errands")}>
         <View
           style={[
             styles.iconWidget,
-            tab === "History" && { backgroundColor: blackBg.backgroundColor },
+            tab === "Errands" && { backgroundColor: blackBg.backgroundColor },
           ]}
         >
-          <MaterialIcons
-            name="history"
-            size={tab === "History" ? 20 : 25}
-            color="white"
+          <Image
+            source={require("../../../assets/icons/errand_icon.png")}
+            style={
+              tab === "Errands"
+                ? { width: 20, height: 20 }
+                : { width: 25, height: 25 }
+            }
           />
         </View>
       </Pressable>
@@ -67,31 +69,11 @@ const BottomNav = ({ tab, handleTab }) => {
     );
   };
 
-  const Account = () => {
-    return (
-      <Pressable onPress={() => handleTab("Account")}>
-        <View
-          style={[
-            styles.iconWidget,
-            tab === "Account" && { backgroundColor: blackBg.backgroundColor },
-          ]}
-        >
-          <FontAwesome
-            name="user"
-            size={tab === "Account" ? 20 : 25}
-            color="white"
-          />
-        </View>
-      </Pressable>
-    );
-  };
-
   return (
     <View style={[styles.tabContainer, { backgroundColor: darkPink }]}>
-      <Home />
-      <History />
+      <Dashboard />
+      <Errands />
       <Chat />
-      <Account />
     </View>
   );
 };

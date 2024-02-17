@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import theme from "../../../../assets/constants/theme";
 import { Feather } from "@expo/vector-icons";
 
-const DATA = ["Dry cleaning", "Washing", "Ironing", "Washing & Ironing"];
+const TABS = ["Dry cleaning", "Washing", "Washing & Ironing"];
 const { darkPink, lightFaded } = theme.COLORS;
 
 const Services = () => {
@@ -32,7 +32,7 @@ const Services = () => {
       </Text>
 
       <FlatList
-        data={DATA}
+        data={TABS}
         renderItem={({ item }) => (
           <Service
             title={item}
